@@ -2,14 +2,20 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { getUserPosts, getUserProfile } from "../redux/Actions/User";
 
 const UserSearch = ({ userId, name, avatar }) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        navigation.navigate("UserProfile", userId);
+        dispatch(getUserPosts(userId));
+        dispatch(getUserProfile(userId));
+
+        navigation.navigate("Account", userId);
       }}
     >
       <Avatar.Image

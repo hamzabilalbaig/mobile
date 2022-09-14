@@ -17,13 +17,18 @@ import { loginUser } from "../redux/Actions/User";
 
 const SignIn = () => {
   const navigation = useNavigation();
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginHandler = () => {
     dispatch(loginUser(email, password));
+    if (error) {
+      alert(error, "or the Email/Password might be incorrect");
+    } else {
+      alert("SignedIn Successfully");
+    }
   };
 
   return (

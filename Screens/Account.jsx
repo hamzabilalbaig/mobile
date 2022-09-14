@@ -17,7 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Post from "../Components/Post";
 import {
   deleteMyProfile,
+  followAndUnfollowUser,
   getMyPosts,
+  getUserPosts,
+  getUserProfile,
   loadUser,
   logoutUser,
 } from "../redux/Actions/User";
@@ -29,75 +32,56 @@ import UserSearch from "../Components/UserSearch";
 import { NavigationActions } from "react-navigation";
 import { CommonActions } from "@react-navigation/native";
 
-const UserProfile = ({ route, navigation }) => {
+const Account = ({ route, navigation }) => {
   const userId = route.params;
   const dispatch = useDispatch();
 
-  const { loading, error, posts } = useSelector((state) => state.myPosts);
-  const { user } = useSelector((state) => state.user);
+  const {
+    user,
+    loading: userLoading,
+    error: userError,
+  } = useSelector((state) => state.userProfile);
+  const { user: me } = useSelector((state) => state.user);
+  const { loading, error, posts } = useSelector((state) => state.userPosts);
   const [modalFollowers, SetModalFollowers] = useState(false);
   const [modalFollowing, SetModalFollowing] = useState(false);
+  const [followingCheck, setFollowingCheck] = useState(false);
 
   useEffect(() => {
-    dispatch(getMyPosts());
-  }, [dispatch]);
+    if (me._id === userId) {
+      navigation.navigate("UserProfile");
+    }
+    if (user.followers && !userLoading) {
+      user.followers.forEach((item) => {
+        if (item._id === me._id) {
+          setFollowingCheck(true);
+        } else {
+          setFollowingCheck(false);
+        }
+      });
+    }
+  }, [me, userId, user, userLoading, user.followers, me._id]);
 
-  const logoutHandler = async () => {
-    await dispatch(logoutUser());
-    alert("Logged Out Successfully");
+  const followingHandler = () => {
+    // setFollowingCheck(!followingCheck);
+    // dispatch(followAndUnfollowUser(userId));
+    // dispatch(getUserProfile(userId));
+    console.log("user Profile/n", user.followers);
   };
 
-  const profileDeleteHandler = () => {
-    Alert.alert(
-      "Delete Profile",
-      "Are you Sure You want to delete this Post?",
-      [
-        {
-          text: "YES",
-          onPress: async () => {
-            await dispatch(deleteMyProfile());
-            alert("Profile Deleted");
-            navigation.navigate("Sign In");
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{ name: "Sign In" }],
-              })
-            );
-          },
-        },
-        {
-          text: "NO",
-          onPress: () => console.log("no pressed"),
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
-  };
-
-  return loading ? (
+  return loading || userLoading ? (
     <Loader />
   ) : (
     <View style={styles.container}>
       <SafeAreaView>
         <ScrollView>
           <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.other}
-              onPress={() => profileDeleteHandler()}
-            >
-              <Icons name="delete-forever" size={30} color="red" />
+            <TouchableOpacity style={styles.other} onPress={() => sada}>
+              <Icons name="delete-forever" size={30} color="white" />
             </TouchableOpacity>
             <Text style={styles.title}>Profile</Text>
-            <TouchableOpacity
-              style={styles.other}
-              onPress={() =>
-                navigation.navigate("EditProfile", { image: user.avatar.url })
-              }
-            >
-              <Icons name="edit" size={30} color="blue" />
+            <TouchableOpacity style={styles.other} onPress={() => asdas}>
+              <Icons name="edit" size={30} color="white" />
             </TouchableOpacity>
           </View>
           <View style={styles.profile}>
@@ -204,10 +188,10 @@ const UserProfile = ({ route, navigation }) => {
           <Button
             style={styles.buttons}
             mode="contained"
-            color="tomato"
-            onPress={() => logoutHandler()}
+            color={followingCheck ? "tomato" : "green"}
+            onPress={() => followingHandler()}
           >
-            Log out
+            {followingCheck ? "UnFollow" : "Follow"}
           </Button>
           <Text style={styles.posts}>Posts ({user.posts.length})</Text>
           {posts && posts.length > 0 ? (
@@ -278,4 +262,4 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 25, color: "blue", marginHorizontal: "25%" },
 });
-export default UserProfile;
+export default Account;

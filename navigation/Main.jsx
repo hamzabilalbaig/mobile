@@ -18,10 +18,10 @@ import UserProfile from "../Screens/UserProfile";
 import Likes from "../Screens/Likes";
 import Comments from "../Screens/Comments";
 import EditProfile from "../Screens/EditProfile";
-import DeleteProfile from "../Screens/DeleteProfile";
 import CameraComponent from "../Screens/CameraComponent";
 import CameraComponent2 from "../Screens/CameraComponent2";
 import CameraComponent3 from "../Screens/CameraComponent3";
+import Account from "../Screens/Account";
 
 const Stack = createNativeStackNavigator();
 
@@ -103,11 +103,7 @@ const Main = () => {
           component={EditProfile}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="DeleteProfile"
-          component={DeleteProfile}
-          options={{ headerShown: false }}
-        />
+
         <Stack.Screen
           name="CameraComponent"
           component={CameraComponent}
@@ -121,6 +117,11 @@ const Main = () => {
         <Stack.Screen
           name="CameraComponent3"
           component={CameraComponent3}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Account"
+          component={Account}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
