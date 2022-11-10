@@ -11,9 +11,9 @@ const UserSearch = ({ userId, name, avatar }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => {
-        dispatch(getUserPosts(userId));
-        dispatch(getUserProfile(userId));
+      onPress={async () => {
+        await dispatch(getUserPosts(userId));
+        await dispatch(getUserProfile(userId));
 
         navigation.navigate("Account", userId);
       }}

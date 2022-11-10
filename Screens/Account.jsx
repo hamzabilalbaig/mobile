@@ -55,18 +55,20 @@ const Account = ({ route, navigation }) => {
       user.followers.forEach((item) => {
         if (item._id === me._id) {
           setFollowingCheck(true);
+          console.log("use", followingCheck);
         } else {
           setFollowingCheck(false);
+          console.log("use", followingCheck);
         }
       });
     }
   }, [me, userId, user, userLoading, user.followers, me._id]);
 
-  const followingHandler = () => {
-    // setFollowingCheck(!followingCheck);
-    // dispatch(followAndUnfollowUser(userId));
-    // dispatch(getUserProfile(userId));
-    console.log("user Profile/n", user.followers);
+  const followingHandler = async () => {
+    setFollowingCheck(!followingCheck);
+    console.log(followingCheck);
+    await dispatch(followAndUnfollowUser(userId));
+    await dispatch(getUserProfile(userId));
   };
 
   return loading || userLoading ? (
