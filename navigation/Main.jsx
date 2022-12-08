@@ -22,6 +22,7 @@ import CameraComponent from "../Screens/CameraComponent";
 import CameraComponent2 from "../Screens/CameraComponent2";
 import CameraComponent3 from "../Screens/CameraComponent3";
 import Account from "../Screens/Account";
+import Conversations from "../Screens/Conversations";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,7 @@ const Main = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
-          isAuthenticated ? "home" : "Sign In"
+          isAuthenticated ? "Conversations" : "Sign In"
           // "Sign In"
         }
       >
@@ -124,9 +125,14 @@ const Main = () => {
           component={Account}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Conversations"
+          component={Conversations}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
 
-      {isAuthenticated && <Footer />}
+      {/* {isAuthenticated && <Footer />} */}
     </NavigationContainer>
   );
 };

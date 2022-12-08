@@ -1,12 +1,14 @@
 import axios from "axios";
-const serverUrl = "http://dotexx.herokuapp.com/api/v1";
+import { serverURL } from "../../constants/Config";
+// const serverURL = "http://dotexx.herokuapp.com/api/v1";
+
 export const likePost = (id) => async (dispatch) => {
   try {
     dispatch({
       type: "likeRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/post/${id}`);
+    const { data } = await axios.get(`${serverURL}/post/${id}`);
     dispatch({
       type: "likeSuccess",
       payload: data.message,
@@ -26,7 +28,7 @@ export const addCommentOnPost = (id, comment) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      `${serverUrl}/post/comment/${id}`,
+      `${serverURL}/post/comment/${id}`,
       {
         comment,
       },
@@ -54,7 +56,7 @@ export const deleteCommentOnPost = (id, commentId) => async (dispatch) => {
       type: "deleteCommentRequest",
     });
 
-    const { data } = await axios.delete(`${serverUrl}/post/comment/${id}`, {
+    const { data } = await axios.delete(`${serverURL}/post/comment/${id}`, {
       data: { commentId },
     });
     dispatch({
@@ -76,7 +78,7 @@ export const createNewPost = (caption, image) => async (dispatch) => {
     });
 
     const { data } = await axios.post(
-      `${serverUrl}/post/upload`,
+      `${serverURL}/post/upload`,
       {
         caption,
         image,
@@ -106,7 +108,7 @@ export const updatePost = (caption, id) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      `${serverUrl}/post/${id}`,
+      `${serverURL}/post/${id}`,
       {
         caption,
       },
@@ -134,7 +136,7 @@ export const deletePost = (id) => async (dispatch) => {
       type: "deletePostRequest",
     });
 
-    const { data } = await axios.delete(`${serverUrl}/post/${id}`);
+    const { data } = await axios.delete(`${serverURL}/post/${id}`);
     dispatch({
       type: "deletePostSuccess",
       payload: data.message,

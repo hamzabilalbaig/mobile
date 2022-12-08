@@ -1,5 +1,6 @@
 import axios from "axios";
-const serverUrl = "http://dotexx.herokuapp.com/api/v1";
+import { serverURL } from "../../constants/Config";
+// const serverURL = "http://dotexx.herokuapp.com/api/v1";
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
@@ -8,7 +9,7 @@ export const loginUser = (email, password) => async (dispatch) => {
     });
 
     const { data } = await axios.post(
-      `${serverUrl}/login`,
+      `${serverURL}/login`,
       { email, password },
       {
         headers: {
@@ -35,7 +36,7 @@ export const loadUser = () => async (dispatch) => {
       type: "LoadUserRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/me`);
+    const { data } = await axios.get(`${serverURL}/me`);
 
     dispatch({
       type: "LoadUserSuccess",
@@ -55,7 +56,7 @@ export const getFollowingPosts = () => async (dispatch) => {
       type: "postOfFollowingRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/posts`);
+    const { data } = await axios.get(`${serverURL}/posts`);
     dispatch({
       type: "postOfFollowingSuccess",
       payload: data.posts,
@@ -74,7 +75,7 @@ export const getMyPosts = () => async (dispatch) => {
       type: "myPostsRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/my/posts`);
+    const { data } = await axios.get(`${serverURL}/my/posts`);
     dispatch({
       type: "myPostsSuccess",
       payload: data.posts,
@@ -95,7 +96,7 @@ export const getAllUsers =
         type: "allUsersRequest",
       });
 
-      const { data } = await axios.get(`${serverUrl}/users?name=${name}`);
+      const { data } = await axios.get(`${serverURL}/users?name=${name}`);
       dispatch({
         type: "allUsersSuccess",
         payload: data.users,
@@ -114,7 +115,7 @@ export const logoutUser = () => async (dispatch) => {
       type: "LogoutUserRequest",
     });
 
-    await axios.get(`${serverUrl}/logout`);
+    await axios.get(`${serverURL}/logout`);
 
     dispatch({
       type: "LogoutUserSuccess",
@@ -135,7 +136,7 @@ export const registerUser =
       });
 
       const { data } = await axios.post(
-        `${serverUrl}/register`,
+        `${serverURL}/register`,
         { name, email, password, avatar },
         {
           headers: {
@@ -163,7 +164,7 @@ export const updateProfile = (name, email, avatar) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      `${serverUrl}/update/profile`,
+      `${serverURL}/update/profile`,
       { name, email, avatar },
       {
         headers: {
@@ -192,7 +193,7 @@ export const updatePassword =
       });
 
       const { data } = await axios.put(
-        `${serverUrl}/update/password`,
+        `${serverURL}/update/password`,
         { oldPassword, newPassword },
         {
           headers: {
@@ -219,7 +220,7 @@ export const deleteMyProfile = () => async (dispatch) => {
       type: "deleteProfileRequest",
     });
 
-    const { data } = await axios.delete(`${serverUrl}/delete/me`);
+    const { data } = await axios.delete(`${serverURL}/delete/me`);
 
     dispatch({
       type: "deleteProfileSuccess",
@@ -240,7 +241,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     });
 
     const { data } = await axios.post(
-      `${serverUrl}/forgot/password`,
+      `${serverURL}/forgot/password`,
       {
         email,
       },
@@ -270,7 +271,7 @@ export const resetPassword = (token, password) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      `${serverUrl}/password/reset/${token}`,
+      `${serverURL}/password/reset/${token}`,
       {
         password,
       },
@@ -299,7 +300,7 @@ export const getUserPosts = (id) => async (dispatch) => {
       type: "userPostsRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/userposts/${id}`);
+    const { data } = await axios.get(`${serverURL}/userposts/${id}`);
     dispatch({
       type: "userPostsSuccess",
       payload: data.posts,
@@ -318,7 +319,7 @@ export const getUserProfile = (id) => async (dispatch) => {
       type: "userProfileRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/user/${id}`);
+    const { data } = await axios.get(`${serverURL}/user/${id}`);
     dispatch({
       type: "userProfileSuccess",
       payload: data.user,
@@ -337,7 +338,7 @@ export const followAndUnfollowUser = (id) => async (dispatch) => {
       type: "followUserRequest",
     });
 
-    const { data } = await axios.get(`${serverUrl}/follow/${id}`);
+    const { data } = await axios.get(`${serverURL}/follow/${id}`);
     dispatch({
       type: "followUserSuccess",
       payload: data.message,
