@@ -5697,6 +5697,11 @@
   "resolved" "https://registry.npmjs.org/react-native-image-base64/-/react-native-image-base64-0.1.4.tgz"
   "version" "0.1.4"
 
+"react-native-image-converter@^0.4.2":
+  "integrity" "sha512-y6rEZLSNseIfoMQyFYQmzLc9rKV5i+HWccOW88IPN5828C2nYorwobVBUrA3hC9C277ZFm7U5XMMxgrSl+h2sw=="
+  "resolved" "https://registry.npmjs.org/react-native-image-converter/-/react-native-image-converter-0.4.2.tgz"
+  "version" "0.4.2"
+
 "react-native-image-picker@^4.10.0":
   "integrity" "sha512-QNK4ZnFLD+BdiM1QL1jh9GUALhRXm3MV97crhnTCSMv50H6E4tq3ozgfyxF5uKz0cECbNkWswg4sjgqZKEJtww=="
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-4.10.0.tgz"

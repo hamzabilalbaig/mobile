@@ -69,7 +69,7 @@ const ConverstionList = ({ list, currentUser }) => {
             color: colors.textPrimary,
           }}
         >
-          {user.name}
+          {user?.name}
         </Text>
       </View>
     </TouchableOpacity>

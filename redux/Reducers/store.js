@@ -21,6 +21,10 @@ const store = configureStore({
     conversation: userConversationReducer,
     message: userMessageReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

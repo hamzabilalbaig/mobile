@@ -27,6 +27,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.6.0",
     "react-native-image-base64": "^0.1.4",
+    "react-native-image-converter": "^0.4.2",
     "react-native-image-picker": "^4.10.0",
     "react-native-paper": "^4.12.4",
     "react-native-safe-area-context": "^4.3.3",

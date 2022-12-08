@@ -30,15 +30,21 @@ const CreatePost = ({ navigation, route }) => {
   const { loading, message } = useSelector((state) => state.like);
 
   const postHandler = async () => {
-    if (imageValue) {
-      await dispatch(createNewPost(captionValue, imageValue));
-      alert("Post Created");
-      navigation.navigate("home");
-    } else {
-      await dispatch(createNewPost(captionValue, image));
-      alert("Post Created");
-      navigation.navigate("home");
-    }
+    // if (imageValue) {
+    //   await dispatch(createNewPost(captionValue, imageValue));
+    //   alert("Post Created");
+    //   navigation.navigate("home");
+    // } else {
+    //   await dispatch(createNewPost(captionValue, image));
+    //   alert("Post Created");
+    //   navigation.navigate("home");
+    // }
+    console.log(image);
+    FileSystem.readAsStringAsync("image.jpg", {
+      encoding: "base64",
+    }).then((i) => setImageValue(`data:image/png;base64,${i}`));
+    console.log(imageValue);
+    // await dispatch(createNewPost(captionValue, imageValue));
   };
 
   useEffect(() => {
