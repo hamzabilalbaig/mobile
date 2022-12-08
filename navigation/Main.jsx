@@ -40,10 +40,15 @@ const Main = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
-          isAuthenticated ? "Conversations" : "Sign In"
+          isAuthenticated ? "home" : "Sign In"
           // "Sign In"
         }
       >
+        <Stack.Screen
+          name="conversation"
+          component={Conversations}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Sign In"
           component={SignIn}
@@ -132,7 +137,7 @@ const Main = () => {
         />
       </Stack.Navigator>
 
-      {/* {isAuthenticated && <Footer />} */}
+      {isAuthenticated && <Footer />}
     </NavigationContainer>
   );
 };
