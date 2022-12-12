@@ -112,4 +112,41 @@ export const userProfileReducer = createReducer(initialState, {
   clearErrors: (state) => {
     state.error = null;
   },
+  clearUserProfile: (state, action) => {
+    state.user = null;
+  },
+});
+
+export const userConversationReducer = createReducer(initialState, {
+  userConversationRequest: (state) => {
+    state.loading = true;
+  },
+  userConversationSuccess: (state, action) => {
+    state.loading = false;
+    state.conversation = action.payload;
+  },
+  userConversationFailure: (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  },
+  clearErrors: (state) => {
+    state.error = null;
+  },
+});
+
+export const userMessageReducer = createReducer(initialState, {
+  userMessageRequest: (state) => {
+    state.loading = true;
+  },
+  userMessageSuccess: (state, action) => {
+    state.loading = false;
+    state.message = action.payload;
+  },
+  userMessageFailure: (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  },
+  clearErrors: (state) => {
+    state.error = null;
+  },
 });

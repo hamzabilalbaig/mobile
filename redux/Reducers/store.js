@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import {
   allUsersReducer,
   postOfFollowingReducer,
+  userConversationReducer,
+  userMessageReducer,
   userProfileReducer,
   userReducer,
 } from "./User";
@@ -16,7 +18,13 @@ const store = configureStore({
     myPosts: myPostsReducer,
     userProfile: userProfileReducer,
     userPosts: userPostsReducer,
+    conversation: userConversationReducer,
+    message: userMessageReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
+import IImageConverter from "react-native-image-converter";
 
 const CameraComponent = ({ navigation, route }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -25,16 +26,29 @@ const CameraComponent = ({ navigation, route }) => {
       return;
     }
 
-    const data = await ImagePicker.launchImageLibraryAsync({
+    await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+    }).then((e) => {
+      return navigation.navigate("CreatePost", { image: e.uri });
     });
-    return navigation.navigate("CreatePost", { image: data.uri });
+    // const param = {
+    //   path: data.uri,
+    //   base64: true, // or true
+    // };
+    // console.log(data.uri);
+    // const { success, errorMsg, imageURI, base64String } =
+    //   await IImageConverter.convert(param);
+    // console.log(success, errorMsg);
+
+    // console.log("after convert", imageURI);
+    // console.log("after convert", base64String);
   };
 
   const clickPicture = async () => {
     const data = await camera.takePictureAsync();
+    console.log(typeof data.uri);
     return navigation.navigate("CreatePost", { image: data.uri });
   };
 

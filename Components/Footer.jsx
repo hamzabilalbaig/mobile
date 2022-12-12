@@ -3,9 +3,13 @@ import React from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllConversation } from "../redux/Actions/User";
 
 const Footer = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   return (
     <View style={styles.Footer}>
       <TouchableOpacity

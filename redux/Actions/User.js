@@ -351,3 +351,51 @@ export const followAndUnfollowUser = (id) => async (dispatch) => {
     });
   }
 };
+
+export const getAllConversation = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "userConversationRequest",
+    });
+
+    const { data } = await axios.get(`${serverURL}/getConversation/${id}`);
+    dispatch({
+      type: "userConversationSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "userConversationFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const getMessages = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "userMessageSuccess",
+    });
+
+    const { data } = await axios.get(`${serverURL}/messages/${id}`);
+    dispatch({
+      type: "userMessageSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "userMessageFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const clearUserProfile = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "clearUserProfile",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

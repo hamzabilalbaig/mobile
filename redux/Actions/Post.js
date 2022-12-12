@@ -77,18 +77,22 @@ export const createNewPost = (caption, image) => async (dispatch) => {
       type: "newPostRequest",
     });
 
-    const { data } = await axios.post(
-      `${serverURL}/post/upload`,
-      {
-        caption,
-        image,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    const { data } = await axios
+      .post(
+        `${serverURL}/post/upload`,
+        {
+          caption,
+          image,
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((e) => {
+        console.log(e);
+      });
     dispatch({
       type: "newPostSuccess",
       payload: data.message,
@@ -96,7 +100,7 @@ export const createNewPost = (caption, image) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "newPostFailure",
-      payload: error.response.data.message,
+      payload: error.response,
     });
   }
 };
