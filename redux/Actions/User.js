@@ -324,6 +324,7 @@ export const getUserProfile = (id) => async (dispatch) => {
       type: "userProfileSuccess",
       payload: data.user,
     });
+    console.log(data.user.name);
   } catch (error) {
     dispatch({
       type: "userProfileFailure",

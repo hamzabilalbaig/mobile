@@ -16,7 +16,7 @@ const Footer = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.other}
-        onPress={() => navigation.navigate("Chat")}
+        onPress={() => navigation.navigate("Conversations")}
       >
         <Icons name="chat-bubble-outline" size={30} color="blue" />
       </TouchableOpacity>
