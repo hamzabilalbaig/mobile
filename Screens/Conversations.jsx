@@ -57,7 +57,10 @@ const ConverstionList = ({ list, currentUser }) => {
         navigation.navigate("Chat", {
           id: list._id,
           avatar: user2?.avatar?.url,
+<<<<<<< HEAD
           name: user2?.name,
+=======
+>>>>>>> 3af6ea55a60e4ff475c9e4e8ae2c96eb107163ff
         })
       }
       // onPress={() => console.log(user)}
@@ -146,7 +149,6 @@ const Conversations = () => {
         }}
       >
         <MaterialIcons name="person" size={24} color="black" />
-
         <Text
           style={{
             fontSize: 20 / fontScale,
