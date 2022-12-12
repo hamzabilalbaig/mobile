@@ -24,20 +24,42 @@ const ConverstionList = ({ list, currentUser }) => {
 
   const navigation = useNavigation();
 
-  const friendID = list.members.find((i) => i !== currentUser);
   const [sender, setsender] = useState("");
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const [user2, setuser2] = useState([]);
+
+  useEffect(async () => {
+    const friendID = list.members.find((i) => i !== currentUser);
     dispatch(getUserProfile(friendID));
+
+    const CreateCon = () => {
+      console.log(friendID, "frnd");
+      axios
+        .get(`${serverURL}/user/${friendID}`)
+        .then((res) => {
+          setuser2(res.data.user);
+          console.log(user2?.avatar.url);
+        })
+        .catch((e) => {
+          console.log(`con error ${e}`);
+        });
+    };
+    await CreateCon();
   }, []);
 
   const { user } = useSelector((state) => state.userProfile);
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Chat", { id: user._id })}
+      onPress={() =>
+        navigation.navigate("Chat", {
+          id: list._id,
+          avatar: user2?.avatar?.url,
+        })
+      }
+      // onPress={() => console.log(user)}
       style={{
         flexDirection: "row",
         paddingHorizontal: 20,
@@ -56,7 +78,7 @@ const ConverstionList = ({ list, currentUser }) => {
         }}
       >
         <Image
-          source={{ uri: user?.avatar.url }}
+          source={{ uri: user2?.avatar?.url }}
           style={{ height: 60, width: 60, borderRadius: 30 }}
         />
       </View>
@@ -69,7 +91,7 @@ const ConverstionList = ({ list, currentUser }) => {
             color: colors.textPrimary,
           }}
         >
-          {user?.name}
+          {user2?.name}
         </Text>
       </View>
     </TouchableOpacity>
@@ -87,7 +109,7 @@ const Conversations = () => {
   const { isAuthenticated, loading, user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    axios.get(serverURL + `/getConversation/${user._id}`).then((res) => {
+    axios.get(serverURL + `/getConversation/${user?._id}`).then((res) => {
       let conversation = res.data;
       setconversation(conversation);
       console.log(conversation);
@@ -123,7 +145,6 @@ const Conversations = () => {
         }}
       >
         <MaterialIcons name="person" size={24} color="black" />
-
         <Text
           style={{
             fontSize: 20 / fontScale,

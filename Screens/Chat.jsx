@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import moment from "moment/moment";
 import { serverURL } from "../constants/Config";
 
-const Chat = () => {
+const Chat = ({ route }) => {
   const navigation = useNavigation();
   const [input, setinput] = useState("");
   const { fontScale } = useWindowDimensions();
@@ -35,6 +35,28 @@ const Chat = () => {
 
   const { isAuthenticated, loading, user } = useSelector((state) => state.user);
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   useEffect(() => {
     getConversation();
   }, [input]);
@@ -43,9 +65,7 @@ const Chat = () => {
 
   const getConversation = async () => {
     try {
-      const res = await axios.get(
-        serverURL + "/getMessage/6373d8fc51fd75ca94cc50b1"
-      );
+      const res = await axios.get(serverURL + `/getMessage/${route.params.id}`);
       setconversation(res.data);
       // console.log(res.data);
     } catch (error) {
@@ -55,10 +75,11 @@ const Chat = () => {
 
   const handleSubmit = async (e) => {
     setinput("");
+    console.log(route.params.id);
     const message = {
       sender: user._id,
       text: input,
-      conversationId: "6373d8fc51fd75ca94cc50b1",
+      conversationId: route.params.id,
     };
     try {
       const res = await axios.post(serverURL + "/postMessage", message);
@@ -89,15 +110,15 @@ const Chat = () => {
                 marginLeft: 7.5,
               }}
             >
-              {/* <Image
-              source={require("../../assets/pf.png")}
-              style={{
-                height: 45,
-                width: 45,
-                borderRadius: 45 / 2,
-              }}
-            /> */}
-              <View
+              <Image
+                source={{ uri: route?.params.avatar }}
+                style={{
+                  height: 45,
+                  width: 45,
+                  borderRadius: 45 / 2,
+                }}
+              />
+              {/* <View
                 style={{
                   height: 45,
                   width: 45,
@@ -105,7 +126,7 @@ const Chat = () => {
                   borderColor: "black",
                   borderWidth: 1,
                 }}
-              />
+              /> */}
               <Text
                 style={{
                   fontWeight: "700",
@@ -114,7 +135,7 @@ const Chat = () => {
                   marginLeft: 7.5,
                 }}
               >
-                Name
+                {route?.params.name}
               </Text>
             </View>
           </View>
