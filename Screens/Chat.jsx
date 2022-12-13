@@ -23,45 +23,52 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import moment from "moment/moment";
 import { serverURL } from "../constants/Config";
+import io from "socket.io-client";
 
 const Chat = ({ route }) => {
   const navigation = useNavigation();
-  const [input, setinput] = useState("");
   const { fontScale } = useWindowDimensions();
   const { top } = useSafeAreaInsets();
+  const { sockett, friendID } = route.params;
+
+  const [input, setinput] = useState("");
 
   const [conversation, setconversation] = useState([]);
   const [newMessage, setnewMessage] = useState([]);
+  const [ArrivalMessage, setArrivalMessage] = useState(null);
 
   const { isAuthenticated, loading, user } = useSelector((state) => state.user);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const scrollViewRef = useRef(null);
+  const socket = useRef();
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
+    socket.current = io("ws://192.168.100.241:3000");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+  useEffect(() => {
+    socket.current.emit("addUser", user._id);
+    socket.current.on("getUsers", (users) => {});
   }, []);
 
   useEffect(() => {
+    console.log("Arrival message", ArrivalMessage);
+    // arrivalMessage &&
+    //   currentChat?.members.includes(arrivalMessage.sender) &&
+    //   setMessages((prev) => [...prev, arrivalMessage]);
+  }, [
+    ArrivalMessage,
+    // , currentChat
+  ]);
+  useEffect(() => {
     getConversation();
-  }, [input]);
-
-  const scrollViewRef = useRef(null);
+  }, [ArrivalMessage]);
 
   const getConversation = async () => {
     try {
@@ -74,13 +81,17 @@ const Chat = ({ route }) => {
   };
 
   const handleSubmit = async (e) => {
-    setinput("");
     console.log(route.params.id);
     const message = {
       sender: user._id,
       text: input,
       conversationId: route.params.id,
     };
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId: friendID,
+      text: input,
+    });
     try {
       const res = await axios.post(serverURL + "/postMessage", message);
       if (res.status === 200) {
@@ -89,6 +100,7 @@ const Chat = ({ route }) => {
     } catch (error) {
       console.log(error);
     }
+    setinput("");
   };
 
   return (

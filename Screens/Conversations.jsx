@@ -18,6 +18,8 @@ import { serverURL } from "../constants/Config";
 import { useEffect } from "react";
 import { getUserProfile } from "../redux/Actions/User";
 import { useNavigation } from "@react-navigation/native";
+import { useRef } from "react";
+import io from "socket.io-client";
 
 const ConverstionList = ({ list, currentUser }) => {
   const { fontScale } = useWindowDimensions();
@@ -27,11 +29,15 @@ const ConverstionList = ({ list, currentUser }) => {
   const [sender, setsender] = useState("");
 
   const dispatch = useDispatch();
+  const [recid, setrecid] = useState("");
 
   const [user2, setuser2] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const { user: me } = useSelector((state) => state.user);
 
   useEffect(async () => {
     const friendID = list.members.find((i) => i !== currentUser);
+    setrecid(friendID);
     dispatch(getUserProfile(friendID));
 
     const CreateCon = () => {
@@ -51,14 +57,25 @@ const ConverstionList = ({ list, currentUser }) => {
 
   const { user } = useSelector((state) => state.userProfile);
 
+  // const socket = useRef();
+
+  // useEffect(() => {
+  //   socket.current = io("ws://192.168.100.241:3000");
+  // }, []);
+  // useEffect(() => {
+  //   socket.current.emit("addUser", me._id);
+  //   socket.current.on("getUsers", (users) => {});
+  // }, []);
+
   return (
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
         navigation.navigate("Chat", {
           id: list._id,
+          friendID: recid,
           avatar: user2?.avatar?.url,
-        })
-      }
+        });
+      }}
       // onPress={() => console.log(user)}
       style={{
         flexDirection: "row",
