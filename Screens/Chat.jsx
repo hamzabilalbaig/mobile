@@ -53,6 +53,7 @@ const Chat = ({ route }) => {
     });
   }, []);
   useEffect(() => {
+    console.log("ok");
     socket.current.emit("addUser", user._id);
     socket.current.on("getUsers", (users) => {});
   }, []);
