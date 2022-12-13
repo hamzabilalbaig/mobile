@@ -31,6 +31,8 @@ import { useState } from "react";
 import UserSearch from "../Components/UserSearch";
 import { NavigationActions } from "react-navigation";
 import { CommonActions } from "@react-navigation/native";
+import axios from "axios";
+import { serverURL } from "../constants/Config";
 
 const Account = ({ route, navigation }) => {
   const userId = route.params;
@@ -64,7 +66,23 @@ const Account = ({ route, navigation }) => {
     }
   }, [me, userId, user, userLoading, user.followers, me._id]);
 
+  const CreateCon = () => {
+    axios
+      .post(`${serverURL}/createConversation`, {
+        senderId: me._id,
+        receiverId: userId,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(`con error ${e}`);
+      });
+  };
+
   const followingHandler = async () => {
+    CreateCon();
+    console.log(userId);
     setFollowingCheck(!followingCheck);
     console.log(followingCheck);
     await dispatch(followAndUnfollowUser(userId));
