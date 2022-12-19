@@ -92,124 +92,141 @@ const Post = ({
     );
   };
   return !isDeleted ? (
-    <View>
-      <UserSearch userId={ownerId} name={ownerName} avatar={ownerImage} />
-      <Text style={styles.text}>{caption}</Text>
-      <View style={styles.imageCon}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: postImage,
-          }}
-        />
-      </View>
-      <View style={styles.infoCon}>
-        <TouchableOpacity style={styles.info}>
-          <Icons
-            onPress={() => handleLike()}
-            name={!like ? "favorite-border" : "favorite"}
-            size={30}
-            color="red"
+    <View style={{ flex: 1, backgroundColor: "#F5F4F2", paddingTop: 20 }}>
+      <View
+        style={{
+          backgroundColor: "#fff",
+          marginHorizontal: 15.5,
+          borderRadius: 20,
+          padding: 10,
+          elevation: 2,
+          marginBottom: 10,
+        }}
+      >
+        <UserSearch userId={ownerId} name={ownerName} avatar={ownerImage} />
+
+        <View style={styles.imageCon}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: postImage,
+            }}
           />
-          <Text
-            onPress={() => {
-              navigation.navigate("Likes", likes);
-            }}
-            style={styles.likeText}
-          >
-            {" " +
-              (likes.length + num) +
-              (likes.length === 1 ? " like" : " likes")}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Comments", {
-              comments: comments,
-              id: postId,
-              isAccount: isAccount,
-            });
-          }}
-          style={styles.info}
-        >
-          <Icons name="comment" size={30} color="blue" />
-
-          <Text>
-            {"  " +
-              comments.length +
-              (comments.length === 1 ? " comment" : " comments")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.infoCon}>
-        {isDelete && (
+        </View>
+        <Text style={styles.text}>{caption}</Text>
+        <View style={styles.infoCon}>
           <TouchableOpacity
             onPress={() => {
-              postDeleteHandler();
+              navigation.navigate("Comments", {
+                comments: comments,
+                id: postId,
+                isAccount: isAccount,
+              });
             }}
             style={styles.info}
           >
-            <Icons name="delete-outline" size={30} color="red" />
-
-            <Text>delete</Text>
+            <Icons name="mode-comment" size={30} color="#B0AAB5" />
+            <Text style={{ fontWeight: "400", color: "#1B1E23" }}>
+              {"  " + comments.length}
+            </Text>
           </TouchableOpacity>
-        )}
-
-        {isAccount && (
           <TouchableOpacity
-            onPress={() => {
-              setModal(!modal);
+            style={{
+              width: "30%",
+              height: 40,
+              backgroundColor: "#EDEDED",
+              borderRadius: 10,
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              flexDirection: "row",
             }}
-            style={styles.info}
           >
-            <Modal
-              animationType="slide"
-              transparent={false}
-              visible={modal}
-              onRequestClose={() => {
+            <Icons
+              onPress={() => handleLike()}
+              name={!like ? "favorite-border" : "favorite"}
+              size={30}
+              color="red"
+            />
+            <Text
+              onPress={() => {
+                navigation.navigate("Likes", likes);
+              }}
+              style={styles.likeText}
+            >
+              {" " + (likes.length + num)}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.infoCon}>
+          {isDelete && (
+            <TouchableOpacity
+              onPress={() => {
+                postDeleteHandler();
+              }}
+              style={styles.info}
+            >
+              <Icons name="delete-outline" size={30} color="red" />
+
+              <Text>delete</Text>
+            </TouchableOpacity>
+          )}
+
+          {isAccount && (
+            <TouchableOpacity
+              onPress={() => {
                 setModal(!modal);
               }}
+              style={styles.info}
             >
-              <View>
-                <View style={styles.header}>
-                  <Icons
-                    onPress={() => {
-                      setModal(!modal);
-                    }}
-                    name="close"
-                    size={30}
-                    color="red"
-                  />
+              <Modal
+                animationType="slide"
+                transparent={false}
+                visible={modal}
+                onRequestClose={() => {
+                  setModal(!modal);
+                }}
+              >
+                <View>
+                  <View style={styles.header}>
+                    <Icons
+                      onPress={() => {
+                        setModal(!modal);
+                      }}
+                      name="close"
+                      size={30}
+                      color="red"
+                    />
 
-                  <Text style={styles.title}>Edit Caption </Text>
-                  <Icons
-                    name="close"
-                    size={30}
-                    color={colors.lightBackground}
+                    <Text style={styles.title}>Edit Caption </Text>
+                    <Icons
+                      name="close"
+                      size={30}
+                      color={colors.lightBackground}
+                    />
+                  </View>
+                  <TextInput
+                    multiline={true}
+                    style={styles.input}
+                    value={caption}
+                    placeholder="Enter your Caption"
+                    onChangeText={(e) => setEditCaption(e)}
                   />
+                  <Button
+                    style={styles.comment}
+                    mode="contained"
+                    color="blue"
+                    onPress={() => editCaptionHandler()}
+                  >
+                    Post
+                  </Button>
                 </View>
-                <TextInput
-                  multiline={true}
-                  style={styles.input}
-                  value={caption}
-                  placeholder="Enter your Caption"
-                  onChangeText={(e) => setEditCaption(e)}
-                />
-                <Button
-                  style={styles.comment}
-                  mode="contained"
-                  color="blue"
-                  onPress={() => editCaptionHandler()}
-                >
-                  Post
-                </Button>
-              </View>
-            </Modal>
-            <Icons name="edit" size={30} color="blue" />
+              </Modal>
+              <Icons name="edit" size={30} color="blue" />
 
-            <Text>edit </Text>
-          </TouchableOpacity>
-        )}
+              <Text>edit </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   ) : (
@@ -218,19 +235,23 @@ const Post = ({
 };
 const styles = StyleSheet.create({
   image: {
-    width: 300,
+    width: "100%",
     height: 300,
+    borderRadius: 14,
   },
   imageCon: {
     justifyContent: "center",
     alignItems: "center",
+
+    paddingTop: 10,
   },
   infoCon: {
     justifyContent: "space-around",
     alignItems: "center",
     flexDirection: "row",
-    margin: "2%",
-    marginTop: "4%",
+    marginHorizontal: "2%",
+
+    // marginTop: "4%",
   },
   info: {
     justifyContent: "space-around",
@@ -238,13 +259,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text: {
-    marginLeft: 40,
-    marginBottom: 30,
-    fontSize: 20,
+    paddingVertical: 10,
+    paddingLeft: 5,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#3B3B3B",
   },
   likeText: {
-    color: "red",
-    fontWeight: "bold",
+    color: "#1B1E23",
   },
   header: {
     paddingTop: 10,
@@ -253,29 +275,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     flexDirection: "row",
   },
-  title: { fontSize: 25, color: "blue", marginHorizontal: "25%" },
+  title: {
+    fontSize: 25,
+    color: "blue",
+    marginHorizontal: "20%",
+    color: colors.textPrimary,
+    fontWeight: "bold",
+  },
   input: {
     backgroundColor: colors.input,
     borderRadius: 15,
-    elevation: 10,
-    height: 80,
-    width: 320,
+    elevation: 2,
+    height: 70,
+    width: "100%",
     textAlign: "center",
-    marginLeft: "5%",
-    marginRight: "1%",
-    marginBottom: "4%",
-    marginTop: "6%",
-    color: "blue",
+    // marginLeft: "5%",
+    // marginRight: "1%",
+    // marginBottom: "4%",
+    // marginTop: "6%",
   },
   comment: {
     borderRadius: 45,
     elevation: 10,
     height: 40,
-    width: 320,
+    width: "100%",
     textAlign: "center",
-    marginLeft: "5%",
-    marginRight: "1%",
-    marginBottom: "4%",
+    // marginLeft: "5%",
+    // marginRight: "1%",
+    // marginBottom: "4%",
     color: "blue",
   },
 });

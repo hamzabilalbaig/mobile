@@ -8,26 +8,19 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
-  Alert,
+  Pressable,
 } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/Colors";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../Components/Post";
-import {
-  deleteMyProfile,
-  getMyPosts,
-  loadUser,
-  logoutUser,
-} from "../redux/Actions/User";
+import { getMyPosts, loadUser, logoutUser } from "../redux/Actions/User";
 import Loader from "../Components/Loader";
 import { Avatar, Button } from "react-native-paper";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import { useState } from "react";
 import UserSearch from "../Components/UserSearch";
-import { NavigationActions } from "react-navigation";
-import { CommonActions } from "@react-navigation/native";
 
 const UserProfile = ({ route, navigation }) => {
   const userId = route.params;
@@ -47,76 +40,81 @@ const UserProfile = ({ route, navigation }) => {
     alert("Logged Out Successfully");
   };
 
-  const profileDeleteHandler = () => {
-    Alert.alert(
-      "Delete Profile",
-      "Are you Sure You want to delete this Post?",
-      [
-        {
-          text: "YES",
-          onPress: async () => {
-            await dispatch(deleteMyProfile());
-            alert("Profile Deleted");
-            navigation.navigate("Sign In");
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{ name: "Sign In" }],
-              })
-            );
-          },
-        },
-        {
-          text: "NO",
-          onPress: () => console.log("no pressed"),
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
-  };
-
   return loading ? (
     <Loader />
   ) : (
     <View style={styles.container}>
       <SafeAreaView>
-        <ScrollView>
-          <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.other}
-              onPress={() => profileDeleteHandler()}
-            >
-              <Icons name="delete-forever" size={30} color="red" />
-            </TouchableOpacity>
-            <Text style={styles.title}>Profile</Text>
-            <TouchableOpacity
-              style={styles.other}
-              onPress={() =>
-                navigation.navigate("EditProfile", { image: user.avatar.url })
-              }
-            >
-              <Icons name="edit" size={30} color="blue" />
-            </TouchableOpacity>
-          </View>
+        <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
+          <View style={styles.header}></View>
           <View style={styles.profile}>
             <Avatar.Image
-              size={200}
+              size={150}
               source={{
                 uri: user.avatar.url,
               }}
             />
           </View>
-          <Text style={styles.profileName}>{user.name}</Text>
-          <Button
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.profileName}>{user.name}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Icons
+              name="edit"
+              size={20}
+              color={colors.textPrimary}
+              style={{ paddingRight: 7 }}
+            />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("EditProfile", { image: user.avatar.url })
+              }
+              style={{ justifyContent: "center" }}
+            >
+              <Text style={{ textDecorationLine: "underline", fontSize: 15 }}>
+                Edit Profile
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* <Button
             style={styles.buttons}
             mode="contained"
             color="blue"
             onPress={() => SetModalFollowers(!modalFollowers)}
           >
             Followers ({user.followers.length})
-          </Button>
+          </Button> */}
+          <View style={styles.userInfoWrapper}>
+            <View style={styles.userInfoItem}>
+              <Text style={styles.userInfoTitle}>{user.posts.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Posts</Text>
+            </View>
+            <Pressable
+              onPress={() => SetModalFollowers(!modalFollowers)}
+              style={styles.userInfoItem}
+            >
+              <Text style={styles.userInfoTitle}>{user.followers.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Followers</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => SetModalFollowing(!modalFollowing)}
+              style={styles.userInfoItem}
+            >
+              <Text style={styles.userInfoTitle}>{user.following.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Following</Text>
+            </Pressable>
+          </View>
           <Modal
             animationType="slide"
             transparent={false}
@@ -125,8 +123,8 @@ const UserProfile = ({ route, navigation }) => {
               SetModalFollowers(!modalFollowers);
             }}
           >
-            <View>
-              <View style={styles.header}>
+            <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+              <View style={[styles.header, { marginBottom: 20 }]}>
                 <Icons
                   onPress={() => {
                     SetModalFollowers(!modalFollowers);
@@ -155,14 +153,14 @@ const UserProfile = ({ route, navigation }) => {
               )}
             </View>
           </Modal>
-          <Button
+          {/* <Button
             style={styles.buttons}
             mode="contained"
             color="blue"
             onPress={() => SetModalFollowing(!modalFollowing)}
           >
             Following ({user.following.length})
-          </Button>
+          </Button> */}
           <Modal
             animationType="slide"
             transparent={false}
@@ -171,8 +169,8 @@ const UserProfile = ({ route, navigation }) => {
               SetModalFollowing(!modalFollowing);
             }}
           >
-            <View>
-              <View style={styles.header}>
+            <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
+              <View style={[styles.header, { marginBottom: 20 }]}>
                 <Icons
                   onPress={() => {
                     SetModalFollowing(!modalFollowing);
@@ -201,30 +199,34 @@ const UserProfile = ({ route, navigation }) => {
               )}
             </View>
           </Modal>
-          <Button
-            style={styles.buttons}
-            mode="contained"
-            color="tomato"
-            onPress={() => logoutHandler()}
-          >
-            Log out
-          </Button>
+          <View style={styles.userInfoWrapper}>
+            <Button
+              style={styles.buttons}
+              mode="contained"
+              color="tomato"
+              onPress={() => logoutHandler()}
+            >
+              Log out
+            </Button>
+          </View>
           <Text style={styles.posts}>Posts ({user.posts.length})</Text>
           {posts && posts.length > 0 ? (
             posts.map((post) => (
-              <Post
-                key={post._id}
-                postId={post._id}
-                caption={post.caption}
-                postImage={post.image.url}
-                likes={post.likes}
-                comments={post.comments}
-                ownerImage={post.owner.avatar.url}
-                ownerName={post.owner.name}
-                ownerId={post.owner._id}
-                isAccount={true}
-                isDelete={true}
-              />
+              <>
+                <Post
+                  key={post._id}
+                  postId={post._id}
+                  caption={post.caption}
+                  postImage={post.image.url}
+                  likes={post.likes}
+                  comments={post.comments}
+                  ownerImage={post.owner.avatar.url}
+                  ownerName={post.owner.name}
+                  ownerId={post.owner._id}
+                  isAccount={true}
+                  isDelete={true}
+                />
+              </>
             ))
           ) : (
             <Text>No posts Found</Text>
@@ -240,33 +242,29 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightBackground,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-
   profile: {
     marginTop: "4%",
     alignSelf: "center",
-    elevation: 20,
-    backgroundColor: "green",
     borderRadius: 360,
   },
   profileName: {
-    marginTop: "3%",
-    marginBottom: "3%",
-    fontSize: 30,
+    marginVertical: 8,
+    fontWeight: "bold",
+    fontSize: 20,
     textAlign: "center",
   },
   buttons: {
-    borderRadius: 45,
-    elevation: 10,
+    borderRadius: 12,
+    elevation: 1,
     height: 40,
-    width: 320,
-    textAlign: "center",
-    marginLeft: "5%",
-    marginRight: "1%",
-    marginBottom: "4%",
-    color: "blue",
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
   },
   posts: {
-    fontSize: 25,
+    fontSize: 20,
+    fontWeight: "700",
     margin: "5%",
   },
   header: {
@@ -277,5 +275,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: { fontSize: 25, color: "blue", marginHorizontal: "25%" },
+  userInfoWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginVertical: 20,
+  },
+  userInfoItem: {
+    justifyContent: "center",
+  },
+  userInfoTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  userInfoSubTitle: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+  },
 });
 export default UserProfile;

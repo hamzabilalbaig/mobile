@@ -9,19 +9,23 @@ import {
   TouchableHighlight,
   Image,
   KeyboardAvoidingView,
+  useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/Colors";
 import Header from "../Components/Header";
-import { Avatar, Button } from "react-native-paper";
+import { Avatar, Button, Surface } from "react-native-paper";
 import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/Actions/User";
+import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Signup = ({ navigation, route }) => {
+  const { fontScale } = useWindowDimensions();
   const { image } = route.params;
 
   const [name, setName] = useState("");
@@ -41,83 +45,169 @@ const Signup = ({ navigation, route }) => {
   const SignUpHandler = async () => {
     await dispatch(registerUser(name, email, password, avatar));
   };
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <SafeAreaView>
-        <Text style={styles.title}>Sign Up</Text>
 
-        <TouchableHighlight
-          style={styles.imageCon}
-          onPress={() => {
-            navigation.navigate("CameraComponent2");
-          }}
-        >
-          <View style={styles.profile}>
-            <Avatar.Image
-              style={{ backgroundColor: "blue" }}
-              size={200}
-              source={{
-                uri: image,
-              }}
-            />
-          </View>
-        </TouchableHighlight>
+  const [secure, setsecure] = useState(false);
+  return (
+    <View style={styles.container}>
+      <View style={{ height: "20%" }}>
+        <Image
+          source={require("../assets/logo.png")}
+          style={{ height: "95%", width: "100%", resizeMode: "contain" }}
+        />
+      </View>
+
+      <TouchableHighlight
+        style={styles.imageCon}
+        onPress={() => {
+          navigation.navigate("CameraComponent2");
+        }}
+      >
+        <View style={styles.profile}>
+          <Avatar.Image
+            style={{ backgroundColor: "blue" }}
+            size={100}
+            source={{
+              uri: image,
+            }}
+          />
+        </View>
+      </TouchableHighlight>
+      <Text
+        style={{
+          color: "#515151",
+          fontSize: 14 / fontScale,
+          fontWeight: "400",
+          paddingBottom: 15,
+          textAlign: "center",
+        }}
+      >
+        Add your profile picture
+      </Text>
+      <Text
+        style={{
+          color: "#515151",
+          fontSize: 18 / fontScale,
+          fontWeight: "600",
+          paddingVertical: 10,
+        }}
+      >
+        Create your account
+      </Text>
+      {/* <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={[styles.container, { paddingHorizontal: 0 }]}
+      > */}
+      <Surface style={styles.input}>
+        <TextInput onChangeText={(e) => setName(e)} placeholder="Name" />
+      </Surface>
+      <Surface style={styles.input}>
         <TextInput
-          style={styles.input}
-          onChangeText={(e) => setName(e)}
-          placeholder="Name"
-        ></TextInput>
-        <TextInput
-          style={styles.input}
           onChangeText={(e) => setEmail(e)}
+          keyboardType="email-address"
           placeholder="Email"
-        ></TextInput>
+        />
+      </Surface>
+      <Surface
+        style={[
+          styles.input,
+          { flexDirection: "row", justifyContent: "space-between" },
+        ]}
+      >
         <TextInput
-          style={styles.input}
           onChangeText={(e) => setPassword(e)}
           placeholder="Password"
-          secureTextEntry
-        ></TextInput>
+          secureTextEntry={!secure}
+          style={{ width: "90%" }}
+        />
+        <TouchableOpacity
+          style={{ justifyContent: "center" }}
+          onPress={() => setsecure(!secure)}
+        >
+          <Icons
+            name={!secure ? "eye-off-outline" : "eye-outline"}
+            color="grey"
+            size={25}
+          />
+        </TouchableOpacity>
+      </Surface>
+      {/* </KeyboardAvoidingView> */}
 
-        <Button
-          style={styles.signup}
-          mode="contained"
-          color="blue"
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          marginBottom: "7.5%",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
           onPress={() => SignUpHandler()}
+          style={{
+            height: 60,
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#0081C6",
+            borderRadius: 8,
+            opacity: 0.7,
+          }}
         >
-          Sign Up
-        </Button>
-        <Text
-          style={styles.textButton}
-          onPress={() => navigation.navigate("Sign In")}
-        >
-          Already a User?
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18 / fontScale,
+            }}
+          >
+            Sign Up
+          </Text>
+        </TouchableOpacity>
+        {/* <Button
+        style={styles.signup}
+        mode="contained"
+        color="blue"
+        onPress={() => SignUpHandler()}
+      >
+        Sign Up
+      </Button> */}
+        {/* <Text
+        style={styles.textButton}
+        onPress={() => navigation.navigate("Sign In")}
+      >
+        Already a User?
+      </Text> */}
+        <Text style={{ color: "grey", paddingTop: "5%" }}>
+          Already have an account?{"  "}
+          <Text
+            style={styles.textButton}
+            onPress={() => navigation.navigate("Sign In")}
+          >
+            Log in
+          </Text>
         </Text>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.lightBackground,
+    backgroundColor: "white",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    alignItems: "center",
+    paddingHorizontal: 30,
   },
   input: {
-    backgroundColor: colors.input,
-    borderRadius: 45,
-    elevation: 10,
-    height: 40,
-    width: 300,
+    // backgroundColor: colors.input,
+    borderRadius: 12,
+    elevation: 1,
+    height: 50,
+    // width: 300,
     textAlign: "center",
-    margin: "2%",
+    // margin: "2%",
     marginVertical: "4%",
     color: "blue",
+    justifyContent: "center",
+    paddingHorizontal: 15,
   },
   title: {
     fontSize: 25,
@@ -136,7 +226,7 @@ const styles = StyleSheet.create({
   textButton: {
     textAlign: "center",
     margin: "4%",
-    color: "blue",
+    color: "#0081C6",
     textDecorationLine: "underline",
   },
   signup: {
@@ -158,8 +248,7 @@ const styles = StyleSheet.create({
     borderRadius: 360,
   },
   imageCon: {
-    borderRadius: 30,
-    elevation: 50,
+    elevation: 5,
     borderRadius: 360,
   },
 });

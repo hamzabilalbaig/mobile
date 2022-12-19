@@ -4,6 +4,7 @@ import { Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { getUserPosts, getUserProfile } from "../redux/Actions/User";
+import { colors } from "../constants/Colors";
 
 const UserSearch = ({ userId, name, avatar }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,6 @@ const UserSearch = ({ userId, name, avatar }) => {
       onPress={async () => {
         await dispatch(getUserPosts(userId));
         await dispatch(getUserProfile(userId));
-
         navigation.navigate("Account", userId);
       }}
     >
@@ -33,13 +33,16 @@ const UserSearch = ({ userId, name, avatar }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    margin: 30,
+    marginHorizontal: 0,
+    paddingTop: 0,
+    paddingBottom: 10,
     width: "100%",
   },
   name: {
     marginLeft: "3%",
-    color: "blue",
-    fontWeight: "700",
+    color: colors.textSecondary,
+    fontWeight: "600",
+    fontSize: 18,
   },
   nameCon: {
     width: "100%",

@@ -3,8 +3,8 @@ export const colors = {
   input: "#F7F4F3",
 
   textPrimary: "#131A2E",
-  textSecondary: "#8D8C8C",
+  textSecondary: "#515151",
   textThree: "#4a4a4a",
 
-  primary: "blue",
+  primary: "#0081C6",
 };

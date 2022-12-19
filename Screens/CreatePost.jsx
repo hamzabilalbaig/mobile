@@ -8,6 +8,7 @@ import {
   Image,
   TouchableHighlight,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -22,7 +23,6 @@ import { useEffect } from "react";
 import Loader from "../Components/Loader";
 
 const CreatePost = ({ navigation, route }) => {
-  const { image } = route.params;
   const [captionValue, setCaptionValue] = useState("No Caption");
   const [imageValue, setImageValue] = useState(null);
 
@@ -39,7 +39,7 @@ const CreatePost = ({ navigation, route }) => {
     //   alert("Post Created");
     //   navigation.navigate("home");
     // }
-    console.log(image);
+
     FileSystem.readAsStringAsync("image.jpg", {
       encoding: "base64",
     }).then((i) => setImageValue(`data:image/png;base64,${i}`));
@@ -48,16 +48,19 @@ const CreatePost = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    FileSystem.readAsStringAsync(image, {
+    FileSystem.readAsStringAsync(route?.params?.image, {
       encoding: "base64",
     }).then((i) => setImageValue(`data:image/png;base64,${i}`));
-  }, [FileSystem, image]);
+  }, [FileSystem, route?.params?.image]);
 
   return loading ? (
     <Loader />
   ) : (
     <View style={styles.container}>
       <SafeAreaView>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text>Back</Text>
+        </TouchableOpacity>
         <Header
           firstIcon={"home"}
           firstNavigate={"home"}
@@ -77,7 +80,10 @@ const CreatePost = ({ navigation, route }) => {
           <Image
             style={styles.image}
             source={{
-              uri: image,
+              uri:
+                route?.params?.image === undefined
+                  ? "https://static.vecteezy.com/system/resources/previews/004/638/341/original/3d-style-camera-icon-blue-color-vector.jpg"
+                  : route?.params?.image,
             }}
           />
         </TouchableHighlight>

@@ -29,7 +29,7 @@ const Chat = ({ route }) => {
   const navigation = useNavigation();
   const { fontScale } = useWindowDimensions();
   const { top } = useSafeAreaInsets();
-  const { sockett, friendID } = route.params;
+  const { friendID } = route.params;
 
   const [input, setinput] = useState("");
 
@@ -42,31 +42,31 @@ const Chat = ({ route }) => {
   const scrollViewRef = useRef(null);
   const socket = useRef();
 
-  useEffect(() => {
-    socket.current = io("ws://192.168.100.241:3000");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
-    });
-  }, []);
-  useEffect(() => {
-    console.log("ok");
-    socket.current.emit("addUser", user._id);
-    socket.current.on("getUsers", (users) => {});
-  }, []);
+  // useEffect(() => {
+  //   socket.current = io("ws://192.168.100.241:3000");
+  //   socket.current.on("getMessage", (data) => {
+  //     setArrivalMessage({
+  //       sender: data.senderId,
+  //       text: data.text,
+  //       createdAt: Date.now(),
+  //     });
+  //   });
+  // }, []);
+  // useEffect(() => {
+  //   console.log("ok");
+  //   socket.current.emit("addUser", user._id);
+  //   socket.current.on("getUsers", (users) => {});
+  // }, []);
 
-  useEffect(() => {
-    console.log("Arrival message", ArrivalMessage);
-    // arrivalMessage &&
-    //   currentChat?.members.includes(arrivalMessage.sender) &&
-    //   setMessages((prev) => [...prev, arrivalMessage]);
-  }, [
-    ArrivalMessage,
-    // , currentChat
-  ]);
+  // useEffect(() => {
+  //   console.log("Arrival message", ArrivalMessage);
+  //   // arrivalMessage &&
+  //   //   currentChat?.members.includes(arrivalMessage.sender) &&
+  //   //   setMessages((prev) => [...prev, arrivalMessage]);
+  // }, [
+  //   ArrivalMessage,
+  //   // , currentChat
+  // ]);
   useEffect(() => {
     getConversation();
   }, [ArrivalMessage]);

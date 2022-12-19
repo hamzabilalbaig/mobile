@@ -23,6 +23,7 @@ import CameraComponent2 from "../Screens/CameraComponent2";
 import CameraComponent3 from "../Screens/CameraComponent3";
 import Account from "../Screens/Account";
 import Conversations from "../Screens/Conversations";
+import BottomNav from "./BottomNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,105 +40,24 @@ const Main = () => {
   ) : (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={
-          isAuthenticated ? "home" : "Sign In"
-          // "Sign In"
-        }
+        screenOptions={{ headerShown: false }}
+        initialRouteName={isAuthenticated ? "BottomNav" : "Sign In"}
       >
-        <Stack.Screen
-          name="conversation"
-          component={Conversations}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Sign In"
-          component={SignIn}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Chat"
-          component={Chat}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CreatePost"
-          component={CreatePost}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Reels"
-          component={Reels}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Rooms"
-          component={Rooms}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Search"
-          component={Search}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="UserProfile"
-          component={UserProfile}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Likes"
-          component={Likes}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Comments"
-          component={Comments}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="CameraComponent"
-          component={CameraComponent}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CameraComponent2"
-          component={CameraComponent2}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CameraComponent3"
-          component={CameraComponent3}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Account"
-          component={Account}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Conversations"
-          component={Conversations}
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="Sign In" component={SignIn} />
+        <Stack.Screen name="BottomNav" component={BottomNav} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="UserProfile" component={UserProfile} />
+        <Stack.Screen name="Likes" component={Likes} />
+        <Stack.Screen name="Comments" component={Comments} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="CameraComponent" component={CameraComponent} />
+        <Stack.Screen name="CameraComponent2" component={CameraComponent2} />
+        <Stack.Screen name="CameraComponent3" component={CameraComponent3} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
 
-      {isAuthenticated && <Footer />}
+      {/* {isAuthenticated && <Footer />} */}
     </NavigationContainer>
   );
 };

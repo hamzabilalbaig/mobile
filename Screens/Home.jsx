@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +20,7 @@ import Post from "../Components/Post";
 import Loader from "../Components/Loader";
 
 const Home = () => {
+  const { fontScale } = useWindowDimensions();
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -41,19 +43,33 @@ const Home = () => {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.other}
-            onPress={() => navigation.navigate("Search")}
-          >
-            <Icons name="search" size={30} color="blue" />
-          </TouchableOpacity>
-          <Text style={styles.dotex}>DOTEX</Text>
-          <TouchableOpacity
-            style={styles.other}
             onPress={() => navigation.navigate("UserProfile")}
           >
-            <Icons name="person-outline" size={30} color="blue" />
+            {/* <Image
+                  source={{ uri: i.owner.avatar.url }}
+                  style={{ height: 30, width: 30, borderRadius: 30 / 2 }}
+                /> */}
+            <Icons name="person-outline" size={30} color="#748c94" />
+          </TouchableOpacity>
+          <Text style={[styles.dotex, { fontSize: 25 / fontScale }]}>
+            DOTE
+            <Text
+              style={[
+                styles.dotex,
+                { fontSize: 25 / fontScale, fontStyle: "italic" },
+              ]}
+            >
+              X
+            </Text>
+          </Text>
+          <TouchableOpacity
+            style={styles.other}
+            onPress={() => navigation.navigate("Search")}
+          >
+            <Icons name="search" size={30} color="#748c94" />
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ marginBottom: 100 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
           {posts && posts.length > 0 ? (
             posts.map((post) => (
               <Post
@@ -84,13 +100,13 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
-    paddingTop: 10,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: "white",
     justifyContent: "space-around",
     flexDirection: "row",
   },
-  dotex: { fontSize: 25, color: "blue", marginHorizontal: "25%" },
+  dotex: { color: colors.primary, marginHorizontal: "25%", fontWeight: "bold" },
   other: {
     marginTop: 0,
   },
