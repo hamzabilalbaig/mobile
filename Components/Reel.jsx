@@ -1,4 +1,5 @@
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -6,15 +7,28 @@ import {
   View,
 } from "react-native";
 
-import { Feather, Ionic, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Video } from "expo-av";
 import { useRef } from "react";
 import { useState } from "react";
 
+import Icons from "react-native-vector-icons/AntDesign";
+
+import Icons3 from "react-native-vector-icons/Feather";
+
+import {
+  AntDesign,
+  Feather,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+
 const Reel = ({ item, index, currentIndex }) => {
   const { height, width, fontScale } = useWindowDimensions();
 
+  const navigation = useNavigation();
   const videoRef = useRef(null);
 
   const onBuffer = (buffer) => {
@@ -25,6 +39,8 @@ const Reel = ({ item, index, currentIndex }) => {
   };
 
   const [mute, setMute] = useState(false);
+
+  const { user } = useSelector((state) => state.user);
 
   return (
     <View
@@ -38,8 +54,8 @@ const Reel = ({ item, index, currentIndex }) => {
     >
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => console.log(item.video)}
-        style={{ width: "100%", height: "80%", position: "absolute" }}
+        onPress={() => setMute(!mute)}
+        style={{ width: "100%", height: "100%", position: "absolute" }}
       >
         <Video
           ref={videoRef}
@@ -58,26 +74,32 @@ const Reel = ({ item, index, currentIndex }) => {
           }}
         />
       </TouchableOpacity>
-
+      <TouchableOpacity
+        style={{ position: "absolute", top: "4%", left: "4%" }}
+        onPress={() => navigation.goBack(null)}
+      >
+        <MaterialIcons name="arrow-back" size={28} color="white" />
+      </TouchableOpacity>
       <View
         style={{
           position: "absolute",
-          bottom: 10, //edited
+          bottom: 0, //edited
           right: 0,
+          alignItems: "center",
         }}
       >
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={() => console.log("like")}
-          style={{ padding: 10 }}
+          style={{ padding: 5 }}
         >
           <AntDesign name={"heart"} color={"red"} size={25} />
           <Text style={{ color: "white", textAlign: "center" }}>1</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
-          <Ionic name="ios-chatbubble-outline" color="white" size={25} />
+          <Ionicons name="ios-chatbubble-outline" color="white" size={25} />
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
-          <Ionic name="paper-plane-outline" color="white" size={25} />
+          <Ionicons name="paper-plane-outline" color="white" size={25} />
         </TouchableOpacity>
         <TouchableOpacity style={{ padding: 10 }}>
           <Feather name="more-vertical" color="white" size={25} />
@@ -93,15 +115,15 @@ const Reel = ({ item, index, currentIndex }) => {
           }}
         >
           <Image
-              source={item.postProfile}
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 10,
-                resizeMode: 'cover',
-              }}
-            />
-        </View> */}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 10,
+              resizeMode: "cover",
+            }}
+            source={{ uri: user?.avatar.url }}
+          />
+        </View>
       </View>
     </View>
   );
