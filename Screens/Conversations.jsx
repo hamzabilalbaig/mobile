@@ -7,6 +7,7 @@ import {
   View,
   FlatList,
   Image,
+  Keyboard,
 } from "react-native";
 import React from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -74,6 +75,7 @@ const ConverstionList = ({ list, currentUser }) => {
           id: list._id,
           friendID: recid,
           avatar: user2?.avatar?.url,
+          name: user2?.name,
         });
       }}
       // onPress={() => console.log(user)}
@@ -122,15 +124,26 @@ const Conversations = () => {
   const [searchInput, setsearchInput] = useState("");
 
   const [conversation, setconversation] = useState([]);
+  const [chatLoading, setchatLoading] = useState(false);
+
+  const navigation = useNavigation();
 
   const { isAuthenticated, loading, user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    axios.get(serverURL + `/getConversation/${user?._id}`).then((res) => {
-      let conversation = res.data;
-      setconversation(conversation);
-      console.log(conversation);
-    });
+    setchatLoading(true);
+    axios
+      .get(serverURL + `/getConversation/${user?._id}`)
+      .then((res) => {
+        let conversation = res.data;
+        setconversation(conversation);
+        console.log(conversation);
+        setchatLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setchatLoading(false);
+      });
   }, []);
 
   const keyEx = (item) => {
@@ -149,34 +162,36 @@ const Conversations = () => {
     );
   };
 
-  const rendeR = ({ item }) => <RenderList item={item} />;
+  const rendeR = ({ item }) => <ConverstionList item={item} />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", paddingTop: "14%" }}>
+    <View style={{ flex: 1, backgroundColor: "white", paddingTop: "7.5%" }}>
       {/* Header */}
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          paddingHorizontal: 20,
+          marginHorizontal: 20,
+          paddingBottom: 15,
         }}
       >
-        <MaterialIcons name="person" size={24} color="black" />
         <Text
-          style={{
-            fontSize: 20 / fontScale,
-            fontWeight: "700",
-            color: colors.textPrimary,
-          }}
+          style={{ fontSize: 28 / fontScale, fontWeight: "600", color: "grey" }}
         >
-          Chats
+          Chat
         </Text>
-
-        <MaterialIcons name="add" size={24} color="black" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons
+            name="close"
+            size={30}
+            color="black"
+            style={{ opacity: 0.4 }}
+          />
+        </TouchableOpacity>
       </View>
 
       {/* Search */}
-      <View style={styles.searchContainer}>
+      {/* <View style={styles.searchContainer}>
         <View
           style={[
             styles.searchInputStyles,
@@ -201,20 +216,75 @@ const Conversations = () => {
         >
           <Ionicons name="search-outline" size={24} color={"white"} />
         </TouchableOpacity>
+      </View> */}
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 20.5,
+        }}
+      >
+        <View
+          style={{
+            width: searchFocus ? "85%" : "100%",
+            height: 40,
+            backgroundColor: "#d2d2d2",
+            borderRadius: 12,
+            borderWidth: 0,
+            flexDirection: "row",
+            //   justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 10,
+            // borderColor: searchFocus ? colors.primary : "grey",
+            // borderWidth: searchFocus ? 2 : 1,
+          }}
+        >
+          <Ionicons name="search" size={24} color={"grey"} />
+          <TextInput
+            underlineColorAndroid="transparent"
+            onFocus={() => setsearchFocus(true)}
+            placeholder="Search"
+            value={searchInput}
+            onChangeText={(text) => {
+              setsearchInput(text);
+            }}
+            style={{ paddingLeft: 8, width: "80%" }}
+          />
+        </View>
+        {searchFocus && (
+          <TouchableOpacity
+            onPress={() => {
+              setsearchFocus(false);
+              Keyboard.dismiss();
+            }}
+            style={{
+              width: "15%",
+              height: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: 5,
+            }}
+          >
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* List */}
 
-      {conversation.map((item, index) => {
+      {/* {conversation.map((item, index) => {
         return <ConverstionList list={item} currentUser={user._id} />;
-      })}
-      {/* <FlatList
+      })} */}
+      <FlatList
         data={conversation}
         keyExtractor={keyEx}
-        ListEmptyComponent={listEmpty}
+        ListEmptyComponent={!chatLoading && listEmpty}
         contentContainerStyle={{ paddingBottom: 10 }}
-        renderItem={rendeR}
-      /> */}
+        renderItem={({ item }) => (
+          <ConverstionList list={item} currentUser={user._id} />
+        )}
+      />
     </View>
   );
 };
@@ -227,7 +297,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20.5,
     marginBottom: 20,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   searchInputStyles: {
     width: "85%",

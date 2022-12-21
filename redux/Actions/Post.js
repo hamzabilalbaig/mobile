@@ -76,10 +76,10 @@ export const createNewPost = (caption, image) => async (dispatch) => {
     dispatch({
       type: "newPostRequest",
     });
-
+    console.log(image, "action");
     const { data } = await axios
       .post(
-        `${serverURL}/post/upload`,
+        `${serverURL}/reel/upload`,
         {
           caption,
           image,
@@ -95,16 +95,17 @@ export const createNewPost = (caption, image) => async (dispatch) => {
       });
     dispatch({
       type: "newPostSuccess",
-      payload: data.message,
+      payload: data,
     });
+    console.log(data, "reels data");
   } catch (error) {
     dispatch({
       type: "newPostFailure",
       payload: error.response,
     });
+    console.log(error, "upload error");
   }
 };
-
 export const updatePost = (caption, id) => async (dispatch) => {
   try {
     dispatch({

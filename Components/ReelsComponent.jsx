@@ -6,12 +6,13 @@ import { useState } from "react";
 
 const videos = [
   {
-    video: {
-      uri: "https://www.youtube.com/shorts/U0gREMHcVqg",
-    },
+    video: require("../assets/video3.mp4"),
   },
   {
-    video: require("../assets/video2.mp4"),
+    video: require("../assets/video1.mp4"),
+  },
+  {
+    video: require("../assets/video4.mp4"),
   },
 ];
 

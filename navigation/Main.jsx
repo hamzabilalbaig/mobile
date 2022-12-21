@@ -55,6 +55,7 @@ const Main = () => {
         <Stack.Screen name="CameraComponent2" component={CameraComponent2} />
         <Stack.Screen name="CameraComponent3" component={CameraComponent3} />
         <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="Account" component={Account} />
       </Stack.Navigator>
 
       {/* {isAuthenticated && <Footer />} */}

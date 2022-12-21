@@ -30,25 +30,16 @@ const CameraComponent = ({ navigation, route }) => {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      mediaTypes: "Videos",
     }).then((e) => {
+      console.log(e, "image library");
       return navigation.navigate("CreatePost", { image: e.uri });
     });
-    // const param = {
-    //   path: data.uri,
-    //   base64: true, // or true
-    // };
-    // console.log(data.uri);
-    // const { success, errorMsg, imageURI, base64String } =
-    //   await IImageConverter.convert(param);
-    // console.log(success, errorMsg);
-
-    // console.log("after convert", imageURI);
-    // console.log("after convert", base64String);
   };
 
   const clickPicture = async () => {
     const data = await camera.takePictureAsync();
-    console.log(typeof data.uri);
+    console.log(data.uri);
     return navigation.navigate("CreatePost", { image: data.uri });
   };
 

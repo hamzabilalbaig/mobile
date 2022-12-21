@@ -69,7 +69,7 @@ const Chat = ({ route }) => {
   // ]);
   useEffect(() => {
     getConversation();
-  }, [ArrivalMessage]);
+  }, [input]);
 
   const getConversation = async () => {
     try {
@@ -88,11 +88,11 @@ const Chat = ({ route }) => {
       text: input,
       conversationId: route.params.id,
     };
-    socket.current.emit("sendMessage", {
-      senderId: user._id,
-      receiverId: friendID,
-      text: input,
-    });
+    // socket.current.emit("sendMessage", {
+    //   senderId: user._id,
+    //   receiverId: friendID,
+    //   text: input,
+    // });
     try {
       const res = await axios.post(serverURL + "/postMessage", message);
       if (res.status === 200) {
@@ -105,7 +105,7 @@ const Chat = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+    <View style={[styles.container]}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -113,7 +113,12 @@ const Chat = ({ route }) => {
               style={{ marginRight: 8 }}
               onPress={() => navigation.goBack()}
             >
-              <MaterialIcons name="arrow-back" size={28} color="black" />
+              <MaterialIcons
+                name="arrow-back"
+                size={28}
+                color="#2b2b2b"
+                style={{ opacity: 0.75 }}
+              />
             </TouchableOpacity>
             <View
               style={{
@@ -142,7 +147,7 @@ const Chat = ({ route }) => {
               /> */}
               <Text
                 style={{
-                  fontWeight: "700",
+                  fontWeight: "600",
                   fontSize: 18 / fontScale,
                   color: "black",
                   marginLeft: 7.5,
@@ -154,16 +159,27 @@ const Chat = ({ route }) => {
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <TouchableOpacity style={{ marginRight: 12 }}>
-              <MaterialIcons name="call" size={28} color="black" />
+              <MaterialIcons
+                name="call"
+                size={28}
+                color="#2b2b2b"
+                style={{ opacity: 0.75 }}
+              />
             </TouchableOpacity>
             <TouchableOpacity>
-              <MaterialIcons name="video-call" size={28} color="black" />
+              <MaterialIcons
+                name="video-call"
+                size={28}
+                color="#2b2b2b"
+                style={{ opacity: 0.75 }}
+              />
             </TouchableOpacity>
           </View>
         </View>
       </View>
+
       <KeyboardAvoidingView
-        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
         keyboardVerticalOffset={0}
       >
@@ -185,7 +201,7 @@ const Chat = ({ route }) => {
                           <Text style={styles.recieverText}>{chat.text}</Text>
                         </View>
                         <View style={styles.recieverTime}>
-                          <Text>
+                          <Text style={{ fontSize: 11 / fontScale }}>
                             {moment(chat.createdAt).startOf("LTS").fromNow()}
                           </Text>
                         </View>
@@ -196,7 +212,7 @@ const Chat = ({ route }) => {
                           <Text style={styles.senderText}>{chat.text}</Text>
                         </View>
                         <View style={styles.senderTime}>
-                          <Text>
+                          <Text style={{ fontSize: 11 / fontScale }}>
                             {moment(chat.createdAt).startOf("LTS").fromNow()}
                           </Text>
                         </View>
@@ -209,8 +225,16 @@ const Chat = ({ route }) => {
             <View style={styles.footer}>
               <View style={styles.textInput}>
                 <TextInput
+                  onPressIn={() =>
+                    scrollViewRef.current.scrollToEnd({ animated: true })
+                  }
+                  onFocus={() =>
+                    scrollViewRef.current.scrollToEnd({ animated: true })
+                  }
                   value={input}
-                  onChangeText={(text) => setinput(text)}
+                  onChangeText={(text) => {
+                    setinput(text);
+                  }}
                   placeholder="Send Message"
                   style={{
                     width: "85%",
@@ -224,7 +248,7 @@ const Chat = ({ route }) => {
           </>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -257,7 +281,7 @@ const styles = StyleSheet.create({
   },
   sender: {
     padding: 15,
-    backgroundColor: "blue",
+    backgroundColor: colors.primary,
     alignSelf: "flex-start",
     borderRadius: 20,
     marginLeft: 15,
@@ -301,12 +325,22 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
+    paddingTop: "6.5%",
     backgroundColor: "white",
-    marginBottom: "5%",
     alignItems: "center",
+    borderBottomWidth: 0.25,
+    borderBottomColor: "grey",
+    paddingBottom: 15,
+    elevation: 5,
+    shadowColor: "black",
+    shadowRadius: 4,
+    shadowOpacity: 0.3,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
   },
   headerTitle: {
-    marginTop: "3%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

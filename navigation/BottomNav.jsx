@@ -9,29 +9,30 @@ import Rooms from "../Screens/Rooms";
 import Conversations from "../Screens/Conversations";
 import { colors } from "../constants/Colors";
 import Icons from "react-native-vector-icons/AntDesign";
+import MIcons from "react-native-vector-icons/MaterialIcons";
+import FIcons from "react-native-vector-icons/FontAwesome";
 const Tab = createBottomTabNavigator();
 
-const AddPostTav = ({ children, onPress }) => {
-  <TouchableOpacity
-    style={{
-      top: -30,
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 999,
-    }}
-    onPress={onPress}
-  >
+const Custom = ({ focused, IconName, Ic, title }) => {
+  return (
     <View
-      style={{
-        width: 70,
-        height: 70,
-        borderRadius: 70 / 2,
-        backgroundColor: colors.primary,
-      }}
+      style={{ justifyContent: "center", alignItems: "center", paddingTop: 10 }}
     >
-      {children}
+      <Ic
+        name={IconName}
+        color={focused ? colors.primary : "#748c94"}
+        size={25}
+      />
+      <Text
+        style={{
+          color: focused ? colors.primary : "#748c94",
+          fontSize: 12,
+        }}
+      >
+        {title}
+      </Text>
     </View>
-  </TouchableOpacity>;
+  );
 };
 
 const BottomNav = () => {
@@ -53,31 +54,12 @@ const BottomNav = () => {
         component={Home}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: 10,
-              }}
-            >
-              <Image
-                source={require("../assets/home.png")}
-                style={{
-                  width: 25,
-                  height: 25,
-                  tintColor: focused ? colors.primary : "#748c94",
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: focused ? colors.primary : "#748c94",
-                  fontSize: 12,
-                }}
-              >
-                Home
-              </Text>
-            </View>
+            <Custom
+              Ic={MIcons}
+              IconName="home-filled"
+              title={"Home"}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -86,31 +68,12 @@ const BottomNav = () => {
         component={Conversations}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: 10,
-              }}
-            >
-              <Image
-                source={require("../assets/chat.png")}
-                style={{
-                  width: 25,
-                  height: 25,
-                  tintColor: focused ? colors.primary : "#748c94",
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: focused ? colors.primary : "#748c94",
-                  fontSize: 12,
-                }}
-              >
-                Chat
-              </Text>
-            </View>
+            <Custom
+              Ic={MIcons}
+              IconName="chat-bubble"
+              title={"Chat"}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -119,19 +82,8 @@ const BottomNav = () => {
         component={CreatePost}
         options={{
           tabBarIcon: ({ focused }) => (
-            // <Image
-            //   source={require("../assets/add.png")}
-            //   style={{
-            //     width: 60,
-            //     height: 60,
-            //     tintColor: colors.primary,
-            //   }}
-            //   resizeMode="contain"
-            // />
-
             <Icons name="pluscircle" color={colors.primary} size={54} />
           ),
-          //   tabBarButton: ({ props }) => <AddPostTav {...props} />,
         }}
       />
       <Tab.Screen
@@ -139,32 +91,14 @@ const BottomNav = () => {
         component={Reels}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: 10,
-              }}
-            >
-              <Image
-                source={require("../assets/reels.png")}
-                style={{
-                  width: 25,
-                  height: 25,
-                  tintColor: focused ? colors.primary : "#748c94",
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: focused ? colors.primary : "#748c94",
-                  fontSize: 12,
-                }}
-              >
-                Reels
-              </Text>
-            </View>
+            <Custom
+              Ic={MIcons}
+              IconName="video-library"
+              title={"Reels"}
+              focused={focused}
+            />
           ),
+          tabBarStyle: { display: "none" },
         }}
       />
       <Tab.Screen
@@ -172,31 +106,12 @@ const BottomNav = () => {
         component={Rooms}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: 10,
-              }}
-            >
-              <Image
-                source={require("../assets/rooms.png")}
-                style={{
-                  width: 25,
-                  height: 25,
-                  tintColor: focused ? colors.primary : "#748c94",
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: focused ? colors.primary : "#748c94",
-                  fontSize: 12,
-                }}
-              >
-                Rooms
-              </Text>
-            </View>
+            <Custom
+              Ic={FIcons}
+              IconName="group"
+              title={"Rooms"}
+              focused={focused}
+            />
           ),
         }}
       />

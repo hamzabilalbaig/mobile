@@ -85,7 +85,15 @@ const Home = () => {
               />
             ))
           ) : (
-            <Text>No posts Found</Text>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 20,
+              }}
+            >
+              <Text>No posts Found</Text>
+            </View>
           )}
         </ScrollView>
       </SafeAreaView>

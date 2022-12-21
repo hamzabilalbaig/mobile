@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -6,20 +6,20 @@ import { useDispatch } from "react-redux";
 import { getUserPosts, getUserProfile } from "../redux/Actions/User";
 import { colors } from "../constants/Colors";
 
-const UserSearch = ({ userId, name, avatar }) => {
+const UserSearch = ({ userId, name, avatar, index }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, { marginTop: index === 0 ? "5%" : 0 }]}
       onPress={async () => {
         await dispatch(getUserPosts(userId));
         await dispatch(getUserProfile(userId));
         navigation.navigate("Account", userId);
       }}
     >
-      <Avatar.Image
-        size={50}
+      <Image
+        style={{ height: 50, width: 50, borderRadius: 25 }}
         source={{
           uri: avatar,
         }}
@@ -33,9 +33,9 @@ const UserSearch = ({ userId, name, avatar }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    marginHorizontal: 0,
-    paddingTop: 0,
-    paddingBottom: 10,
+    marginHorizontal: 10,
+
+    paddingVertical: 10,
     width: "100%",
   },
   name: {

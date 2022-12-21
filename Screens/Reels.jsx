@@ -20,13 +20,12 @@ const Reels = () => {
   return (
     <View
       style={{
-        width: width,
-        height: height,
+        flex: 1,
         backgroundColor: "black",
         position: "relative",
       }}
     >
-      <View
+      {/* <View
         style={{
           paddingTop: 30,
           position: "absolute",
@@ -49,7 +48,7 @@ const Reels = () => {
           Reels
         </Text>
         <Icons name="camera-alt" color="white" size={25} />
-      </View>
+      </View> */}
       <ReelsComponent />
     </View>
   );

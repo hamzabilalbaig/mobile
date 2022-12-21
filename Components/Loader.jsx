@@ -12,7 +12,7 @@ const Loader = () => {
         alignItems: "center",
       }}
     >
-      <Text>Please wait</Text>
+      <Text style={{ paddingBottom: 20 }}>Please wait</Text>
       <ActivityIndicator animating={true} size={100} color="blue" />
     </View>
   );

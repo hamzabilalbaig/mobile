@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Alert,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Avatar, Button } from "react-native-paper";
@@ -17,6 +18,9 @@ import { deletePost, likePost, updatePost } from "../redux/Actions/Post";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/Colors";
 import { getMyPosts, loadUser } from "../redux/Actions/User";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useRef } from "react";
+import { Modalize } from "react-native-modalize";
 const Post = ({
   postId,
   caption,
@@ -29,6 +33,7 @@ const Post = ({
   isDelete = false,
   isAccount = false,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { user } = useSelector((state) => state.user);
   const [like, setLiked] = useState(false);
   const [num, setNum] = useState(0);
@@ -91,6 +96,8 @@ const Post = ({
       }
     );
   };
+
+  const ModalRef = useRef(null);
   return !isDeleted ? (
     <View style={{ flex: 1, backgroundColor: "#F5F4F2", paddingTop: 20 }}>
       <View
@@ -130,6 +137,7 @@ const Post = ({
               {"  " + comments.length}
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={{
               width: "30%",
@@ -141,12 +149,13 @@ const Post = ({
               flexDirection: "row",
             }}
           >
-            <Icons
-              onPress={() => handleLike()}
-              name={!like ? "favorite-border" : "favorite"}
-              size={30}
-              color="red"
-            />
+            <TouchableOpacity onPress={() => handleLike()}>
+              <Icons
+                name={!like ? "favorite-border" : "favorite"}
+                size={30}
+                color="red"
+              />
+            </TouchableOpacity>
             <Text
               onPress={() => {
                 navigation.navigate("Likes", likes);
@@ -156,8 +165,12 @@ const Post = ({
               {" " + (likes.length + num)}
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => ModalRef.current.open()}>
+            <Ionicons name="md-ellipsis-vertical" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.infoCon}>
+
+        {/* <View style={styles.infoCon}>
           {isDelete && (
             <TouchableOpacity
               onPress={() => {
@@ -207,7 +220,8 @@ const Post = ({
                   <TextInput
                     multiline={true}
                     style={styles.input}
-                    value={caption}
+                    defaultValue={caption}
+                    // value={editCaption}
                     placeholder="Enter your Caption"
                     onChangeText={(e) => setEditCaption(e)}
                   />
@@ -226,8 +240,74 @@ const Post = ({
               <Text>edit </Text>
             </TouchableOpacity>
           )}
-        </View>
+        </View> */}
       </View>
+
+      <Modalize ref={ModalRef} HeaderComponent={<></>} snapPoint={350}>
+        <View
+          style={{
+            marginHorizontal: 29,
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={0.8}
+            // onPress={() => {
+            //   EditModal.current?.open();
+            //   MainModal.current?.close();
+            // }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              height: 50,
+            }}
+          >
+            <MaterialIcons name="edit" color="#3B3B3B" size={20} />
+            <Text
+              style={{
+                fontSize: 18 / fontScale,
+                fontWeight: "600",
+                color: "#3B3B3B",
+                paddingLeft: 15,
+              }}
+            >
+              Edit Post
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              width: "100%",
+              backgroundColor: "#dcdcdc",
+              height: 1,
+              marginVertical: 5,
+            }}
+          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            // onPress={() => {
+            //   DeleteModal.current?.open();
+            //   MainModal.current?.close();
+            // }}
+            style={{
+              flexDirection: "row",
+              //   justifyContent: "center",
+              alignItems: "center",
+              height: 50,
+            }}
+          >
+            <MaterialIcons name="delete" color="#FF2323" size={20} />
+            <Text
+              style={{
+                fontSize: 18 / fontScale,
+                fontWeight: "600",
+                color: "#FF2323",
+                paddingLeft: 15,
+              }}
+            >
+              Delete
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modalize>
     </View>
   ) : (
     <View></View>
@@ -250,7 +330,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginHorizontal: "2%",
-
     // marginTop: "4%",
   },
   info: {
@@ -259,7 +338,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text: {
-    paddingVertical: 10,
+    paddingVertical: 18,
     paddingLeft: 5,
     fontSize: 16,
     fontWeight: "600",
