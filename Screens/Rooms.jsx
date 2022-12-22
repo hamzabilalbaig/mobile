@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -33,7 +34,7 @@ import { useCallback } from "react";
 const Rooms = () => {
   const socket = useRef();
   const peer = useRef();
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, height } = useWindowDimensions();
   const navigation = useNavigation();
   const [input, setinput] = useState("");
   const [chat, setchat] = useState([]);
@@ -41,7 +42,7 @@ const Rooms = () => {
   const [roomId, setRoomId] = useState(null);
   const [modal, setModal] = useState(false);
   const [msg, setmsg] = useState("");
-  const [localStream, setLocalStream] = useState(null);
+  const [localStream, setLocalStream] = useState({});
   const [ArrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect(() => {
@@ -51,6 +52,12 @@ const Rooms = () => {
         name: data.name,
         avatar: data.avatar,
         text: data.text,
+      });
+    });
+
+    socket.current.on("joined-room", (data) => {
+      setLocalStream({
+        avatar: data.avatar,
       });
     });
   }, []);
@@ -79,10 +86,12 @@ const Rooms = () => {
   };
 
   const handleJoinRoom = () => {
+    setModal(true);
     socket.current.emit("join-room", {
       roomId: roomId,
       emailId: user.email,
       name: user.name,
+      avatar: user.avatar.url,
     });
   };
 
@@ -193,64 +202,85 @@ const Rooms = () => {
           setModal(!modal);
         }}
       >
-        <View style={{ flex: 1, marginTop: "7.5%", marginHorizontal: 30 }}>
-          <View
-            style={[
-              styles.searchInputStyles,
-              {
-                borderColor: colors.primary,
-                borderWidth: 2,
-              },
-            ]}
-          >
-            <TextInput
-              underlineColorAndroid="transparent"
-              placeholder="Enter message"
-              value={msg}
-              keyboardType="number-pad"
-              onChangeText={(text) => setmsg(text)}
-              style={{ width: "60%" }}
+        <View
+          style={{
+            flex: 1,
+            marginTop: "7.5%",
+            marginHorizontal: 30,
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                marginTop: 20,
+                height: "10%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>Connecting...</Text>
+            </View>
+
+            <View
+              style={{
+                marginVertical: 20,
+                height: "10%",
+                width: "100%",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <TouchableOpacity style={{ height: 50, width: 50 }}>
+                <Image
+                  source={require("../assets/like.png")}
+                  style={{
+                    height: 50,
+                    width: 50,
+                    justifyContent: "center",
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={{ height: 50, width: 50 }}>
+                <Image
+                  source={require("../assets/jh.png")}
+                  style={{
+                    height: 50,
+                    width: 50,
+                    justifyContent: "center",
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <Image
+              source={{ uri: user.avatar.url }}
+              style={{ height: height / 2, width: "100%", borderRadius: 12 }}
             />
-            <TouchableOpacity
-              onPress={sendM}
+            <View
               style={{
-                height: 45,
-                backgroundColor: "red",
-                borderRadius: 12,
-                width: "70%",
+                marginVertical: 20,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 14 / fontScale, color: "white" }}>
-                Send
+              <Text
+                style={{
+                  fontSize: 20 / fontScale,
+                  fontWeight: "700",
+                  color: colors.textPrimary,
+                }}
+              >
+                {user.name}
               </Text>
-            </TouchableOpacity>
+            </View>
+            {/* {localStream && (
+              <Image
+                source={{ uri: localStream?.avatar }}
+                style={{ height: 250, width: "100%" }}
+              />
+            )} */}
           </View>
-          {/* <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginBottom: 35,
-            }}
-          >
-            <TouchableOpacity
-              onPress={endMeeting}
-              style={{
-                height: 45,
-                backgroundColor: "red",
-                borderRadius: 12,
-                width: "70%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontSize: 14 / fontScale, color: "white" }}>
-                Send
-              </Text>
-            </TouchableOpacity>
-          </View> */}
 
           <View
             style={{
