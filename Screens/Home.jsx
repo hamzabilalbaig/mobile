@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Image,
 } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -24,18 +25,20 @@ const Home = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const { loading, posts, error } = useSelector(
+  const { postloading, posts, error } = useSelector(
     (state) => state.postOfFollowing
   );
 
   useEffect(() => {
     dispatch(getFollowingPosts());
-    if (!loading) {
+    if (!postloading) {
       dispatch(loadUser());
     }
   }, [dispatch]);
 
-  return loading ? (
+  const { user, loading } = useSelector((state) => state.user);
+
+  return postloading ? (
     <Loader />
   ) : (
     <View style={styles.container}>
@@ -45,11 +48,14 @@ const Home = () => {
             style={styles.other}
             onPress={() => navigation.navigate("UserProfile")}
           >
-            {/* <Image
-                  source={{ uri: i.owner.avatar.url }}
-                  style={{ height: 30, width: 30, borderRadius: 30 / 2 }}
-                /> */}
-            <Icons name="person-outline" size={30} color="#748c94" />
+            {loading ? (
+              <Icons name="person-outline" size={30} color="#748c94" />
+            ) : (
+              <Image
+                source={{ uri: user?.avatar.url }}
+                style={{ height: 30, width: 30, borderRadius: 30 / 2 }}
+              />
+            )}
           </TouchableOpacity>
           <Text style={[styles.dotex, { fontSize: 25 / fontScale }]}>
             DOTE
@@ -82,6 +88,7 @@ const Home = () => {
                 ownerImage={post.owner.avatar.url}
                 ownerName={post.owner.name}
                 ownerId={post.owner._id}
+                me={false}
               />
             ))
           ) : (

@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCommentOnPost } from "../redux/Actions/Post";
+import { colors } from "../constants/Colors";
 
 const CommentCard = ({
   userId,
@@ -22,19 +23,21 @@ const CommentCard = ({
     dispatch(deleteCommentOnPost(postId, commentId));
   };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        navigation.navigate("UserProfile", userId);
-      }}
-    >
-      <Avatar.Image
-        size={50}
-        source={{
-          uri: avatar,
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={{ flex: 0.1 }}
+        onPress={() => {
+          navigation.navigate("UserProfile", userId);
         }}
-      />
-      {isAccount ? (
+      >
+        <Image
+          source={{
+            uri: avatar,
+          }}
+          style={{ height: 50, width: 50, borderRadius: 25 }}
+        />
+      </TouchableOpacity>
+      {/* {isAccount ? (
         <Icons
           onPress={() => {
             deleteHandler();
@@ -52,31 +55,75 @@ const CommentCard = ({
           size={40}
           color="red"
         />
-      ) : null}
+      ) : null} */}
 
       <View style={styles.nameCon}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.comment}>{comment}</Text>
+        <View style={{ paddingHorizontal: 0 }}>
+          <TouchableOpacity
+            style={{
+              paddingHorizontal: 8,
+            }}
+            onPress={() => {
+              navigation.navigate("UserProfile", userId);
+            }}
+          >
+            <Text style={styles.name}>{name}</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              padding: 10,
+            }}
+          >
+            <Text style={styles.comment}>{comment}</Text>
+          </View>
+        </View>
+        {isAccount ? (
+          <Icons
+            onPress={() => {
+              deleteHandler();
+            }}
+            name="delete"
+            size={25}
+            color="red"
+            style={{ paddingRight: 10 }}
+          />
+        ) : userId === user._id ? (
+          <Icons
+            onPress={() => {
+              deleteHandler();
+            }}
+            name="delete"
+            size={25}
+            color="red"
+            style={{ paddingRight: 10 }}
+          />
+        ) : null}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    margin: 30,
+    marginHorizontal: 20,
     width: "100%",
   },
   name: {
     marginLeft: "3%",
-    color: "blue",
+    color: colors.textPrimary,
     fontWeight: "700",
   },
   nameCon: {
-    width: "100%",
+    flex: 0.8,
+    marginLeft: 20,
+    backgroundColor: colors.input,
+    height: null,
+    padding: 2,
+    paddingTop: 10,
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  comment: {
-    marginLeft: "3%",
-  },
+  comment: {},
 });
 export default CommentCard;

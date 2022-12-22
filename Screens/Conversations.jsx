@@ -8,6 +8,8 @@ import {
   FlatList,
   Image,
   Keyboard,
+  Platform,
+  StatusBar,
 } from "react-native";
 import React from "react";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +23,7 @@ import { getUserProfile } from "../redux/Actions/User";
 import { useNavigation } from "@react-navigation/native";
 import { useRef } from "react";
 import io from "socket.io-client";
+import { ActivityIndicator } from "react-native-paper";
 
 const ConverstionList = ({ list, currentUser }) => {
   const { fontScale } = useWindowDimensions();
@@ -56,7 +59,7 @@ const ConverstionList = ({ list, currentUser }) => {
     await CreateCon();
   }, []);
 
-  const { user } = useSelector((state) => state.userProfile);
+  const { user, loading } = useSelector((state) => state.userProfile);
 
   // const socket = useRef();
 
@@ -165,7 +168,18 @@ const Conversations = () => {
   const rendeR = ({ item }) => <ConverstionList item={item} />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white", paddingTop: "7.5%" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop:
+          Platform.OS === "android" ? StatusBar.currentHeight : "7.5%",
+      }}
+    >
+      <ActivityIndicator
+        animating={chatLoading}
+        style={{ position: "absolute", right: 0, left: 0, bottom: 0, top: 0 }}
+      />
       {/* Header */}
       <View
         style={{

@@ -7,7 +7,12 @@ import {
   userProfileReducer,
   userReducer,
 } from "./User";
-import { likeReducer, myPostsReducer, userPostsReducer } from "./Post";
+import {
+  getReelReducer,
+  likeReducer,
+  myPostsReducer,
+  userPostsReducer,
+} from "./Post";
 
 const store = configureStore({
   reducer: {
@@ -20,6 +25,7 @@ const store = configureStore({
     userPosts: userPostsReducer,
     conversation: userConversationReducer,
     message: userMessageReducer,
+    reel: getReelReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

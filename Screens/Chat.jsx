@@ -42,34 +42,34 @@ const Chat = ({ route }) => {
   const scrollViewRef = useRef(null);
   const socket = useRef();
 
-  // useEffect(() => {
-  //   socket.current = io("ws://192.168.100.241:3000");
-  //   socket.current.on("getMessage", (data) => {
-  //     setArrivalMessage({
-  //       sender: data.senderId,
-  //       text: data.text,
-  //       createdAt: Date.now(),
-  //     });
-  //   });
-  // }, []);
-  // useEffect(() => {
-  //   console.log("ok");
-  //   socket.current.emit("addUser", user._id);
-  //   socket.current.on("getUsers", (users) => {});
-  // }, []);
+  useEffect(() => {
+    socket.current = io("ws://192.168.0.103:3000");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+  useEffect(() => {
+    console.log("ok");
+    socket.current.emit("addUser", user._id);
+    socket.current.on("getUsers", (users) => {});
+  }, []);
 
-  // useEffect(() => {
-  //   console.log("Arrival message", ArrivalMessage);
-  //   // arrivalMessage &&
-  //   //   currentChat?.members.includes(arrivalMessage.sender) &&
-  //   //   setMessages((prev) => [...prev, arrivalMessage]);
-  // }, [
-  //   ArrivalMessage,
-  //   // , currentChat
-  // ]);
+  useEffect(() => {
+    console.log("Arrival message", ArrivalMessage);
+    // arrivalMessage &&
+    //   currentChat?.members.includes(arrivalMessage.sender) &&
+    //   setMessages((prev) => [...prev, arrivalMessage]);
+  }, [
+    ArrivalMessage,
+    // , currentChat
+  ]);
   useEffect(() => {
     getConversation();
-  }, [input]);
+  }, [ArrivalMessage]);
 
   const getConversation = async () => {
     try {
@@ -88,11 +88,11 @@ const Chat = ({ route }) => {
       text: input,
       conversationId: route.params.id,
     };
-    // socket.current.emit("sendMessage", {
-    //   senderId: user._id,
-    //   receiverId: friendID,
-    //   text: input,
-    // });
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId: friendID,
+      text: input,
+    });
     try {
       const res = await axios.post(serverURL + "/postMessage", message);
       if (res.status === 200) {
@@ -208,8 +208,29 @@ const Chat = ({ route }) => {
                       </>
                     ) : (
                       <>
-                        <View style={styles.sender}>
-                          <Text style={styles.senderText}>{chat.text}</Text>
+                        <View style={{ flexDirection: "row" }}>
+                          <View
+                            style={{
+                              height: null,
+                              width: 50,
+                              justifyContent: "flex-end",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Image
+                              source={{ uri: user.avatar.url }}
+                              style={{
+                                height: 30,
+                                width: 30,
+                                borderRadius: 30 / 2,
+                              }}
+                            />
+                          </View>
+                          <View>
+                            <View style={styles.sender}>
+                              <Text style={styles.senderText}>{chat.text}</Text>
+                            </View>
+                          </View>
                         </View>
                         <View style={styles.senderTime}>
                           <Text style={{ fontSize: 11 / fontScale }}>
@@ -284,8 +305,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignSelf: "flex-start",
     borderRadius: 20,
-    marginLeft: 15,
-    maxWidth: "80%",
+    // maxWidth: "90%",
     position: "relative",
     marginBottom: 0,
   },
@@ -295,12 +315,12 @@ const styles = StyleSheet.create({
     // marginLeft: 10,
   },
   senderTime: {
-    padding: 15,
+    padding: 0,
     paddingTop: 5,
     alignSelf: "flex-start",
-    marginLeft: 7.5,
+    marginLeft: 57.5,
     position: "relative",
-    marginBottom: 10,
+    marginBottom: 0,
   },
   footer: {
     flexDirection: "row",
@@ -325,7 +345,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
-    paddingTop: "6.5%",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : "7.5%",
     backgroundColor: "white",
     alignItems: "center",
     borderBottomWidth: 0.25,

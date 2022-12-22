@@ -10,21 +10,26 @@ import {
   Image,
   KeyboardAvoidingView,
   Modal,
+  useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/Colors";
 import Header from "../Components/Header";
-import { Avatar, Button } from "react-native-paper";
+import { Avatar, Button, Surface } from "react-native-paper";
 import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser, registerUser, updateProfile } from "../redux/Actions/User";
 import Icons from "react-native-vector-icons/MaterialIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const EditProfile = ({ navigation, route }) => {
+const EditProfile = ({ route }) => {
   const { user } = useSelector((state) => state.user);
+  const navigation = useNavigation();
+  const { fontScale } = useWindowDimensions();
 
   const { image } = route.params;
 
@@ -55,44 +60,79 @@ const EditProfile = ({ navigation, route }) => {
     await dispatch(updatePassword(oldPass, newPass));
     alert("password Updated");
     dispatch(loadUser());
-    navigation.navigate("UserProfile");
+    navigation.goBack();
   };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <SafeAreaView>
-        <Text style={styles.title}>Edit Profile</Text>
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 20,
+            borderBottomWidth: 0.25,
+            borderBottomColor: "grey",
+            paddingBottom: 15,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24 / fontScale,
+              fontWeight: "600",
+              color: "grey",
+            }}
+          >
+            Edit Profile
+          </Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons
+              name="close"
+              size={30}
+              color="black"
+              style={{ opacity: 0.4 }}
+            />
+          </TouchableOpacity>
+        </View>
 
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.imageCon}
           onPress={() => {
             navigation.navigate("CameraComponent3");
           }}
         >
           <View style={styles.profile}>
-            <Avatar.Image
-              style={{ backgroundColor: "blue" }}
-              size={200}
+            <Image
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 150 / 2,
+                backgroundColor: "red",
+              }}
               source={{
                 uri: image,
               }}
             />
           </View>
-        </TouchableHighlight>
-        <TextInput
-          value={name}
-          style={styles.input}
-          onChangeText={(e) => setName(e)}
-          placeholder="Name"
-        ></TextInput>
-        <TextInput
-          value={email}
-          style={styles.input}
-          onChangeText={(e) => setEmail(e)}
-          placeholder="Email"
-        ></TextInput>
+        </TouchableOpacity>
+
+        <Surface style={styles.input}>
+          <TextInput
+            value={name}
+            onChangeText={(e) => setName(e)}
+            placeholder="Name"
+          />
+        </Surface>
+
+        <Surface style={styles.input}>
+          <TextInput
+            value={email}
+            onChangeText={(e) => setEmail(e)}
+            placeholder="Email"
+          />
+        </Surface>
+
         <Text
           style={styles.textButton}
           onPress={() => setUpdateModal(!updateModal)}
@@ -153,16 +193,48 @@ const EditProfile = ({ navigation, route }) => {
             </Button> */}
           </View>
         </Modal>
-        <Button
+
+        {/* <Button
           style={styles.signup}
           mode="contained"
           color="blue"
           onPress={() => EditProfileHandler()}
         >
           Confirm
-        </Button>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        </Button> */}
+      </KeyboardAvoidingView>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          marginBottom: "5%",
+          alignItems: "center",
+          marginHorizontal: 20,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => EditProfileHandler()}
+          style={{
+            height: 60,
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#0081C6",
+            borderRadius: 8,
+            opacity: 0.7,
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 18 / fontScale,
+            }}
+          >
+            Update
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -170,19 +242,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.lightBackground,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    alignItems: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : "7.5%",
   },
   input: {
-    backgroundColor: colors.input,
-    borderRadius: 45,
-    elevation: 10,
-    height: 40,
-    width: 300,
+    // backgroundColor: colors.input,
+    borderRadius: 12,
+    elevation: 1,
+    height: 50,
+    // width: 300,
     textAlign: "center",
-    margin: "2%",
+    // margin: "2%",
     marginVertical: "4%",
     color: "blue",
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    marginHorizontal: 20,
   },
   inputt: {
     backgroundColor: colors.input,
@@ -203,14 +277,13 @@ const styles = StyleSheet.create({
     color: "blue",
   },
   profile: {
-    marginTop: "4%",
-    marginBottom: "4%",
+    marginVertical: "8%",
     alignSelf: "center",
-    elevation: 20,
-    backgroundColor: "green",
+    elevation: 5,
     borderRadius: 360,
+    height: 150,
+    width: 150,
   },
-
   signup: {
     borderRadius: 45,
     elevation: 10,

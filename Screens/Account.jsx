@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  Pressable,
 } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -95,7 +96,7 @@ const Account = ({ route, navigation }) => {
     <View style={styles.container}>
       <SafeAreaView>
         <ScrollView>
-          <View style={styles.header}>
+          {/* <View style={styles.header}>
             <TouchableOpacity style={styles.other} onPress={() => sada}>
               <Icons name="delete-forever" size={30} color="white" />
             </TouchableOpacity>
@@ -103,117 +104,55 @@ const Account = ({ route, navigation }) => {
             <TouchableOpacity style={styles.other} onPress={() => asdas}>
               <Icons name="edit" size={30} color="white" />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.profile}>
             <Avatar.Image
-              size={200}
+              size={150}
               source={{
                 uri: user.avatar.url,
               }}
             />
           </View>
-          <Text style={styles.profileName}>{user.name}</Text>
-          <Button
-            style={styles.buttons}
-            mode="contained"
-            color="blue"
-            onPress={() => SetModalFollowers(!modalFollowers)}
-          >
-            Followers ({user.followers.length})
-          </Button>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={modalFollowers}
-            onRequestClose={() => {
-              SetModalFollowers(!modalFollowers);
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <View>
-              <View style={styles.header}>
-                <Icons
-                  onPress={() => {
-                    SetModalFollowers(!modalFollowers);
-                  }}
-                  name="close"
-                  size={30}
-                  color="red"
-                />
-
-                <Text style={styles.title}>Followers</Text>
-                <Icons name="close" size={30} color={colors.lightBackground} />
-              </View>
-              {user && user.followers.length > 0 ? (
-                user.followers.map((follow) => (
-                  <UserSearch
-                    key={follow._id}
-                    userId={follow._id}
-                    name={follow.name}
-                    avatar={follow.avatar.url}
-                  />
-                ))
-              ) : (
-                <Text style={{ margin: "2vmax" }}>
-                  There Are No Followers yet.
-                </Text>
-              )}
+            <Text style={styles.profileName}>{user.name}</Text>
+          </View>
+          <View style={styles.userInfoWrapper}>
+            <View style={styles.userInfoItem}>
+              <Text style={styles.userInfoTitle}>{user.posts.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Posts</Text>
             </View>
-          </Modal>
-          <Button
-            style={styles.buttons}
-            mode="contained"
-            color="blue"
-            onPress={() => SetModalFollowing(!modalFollowing)}
-          >
-            Following ({user.following.length})
-          </Button>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={modalFollowing}
-            onRequestClose={() => {
-              SetModalFollowing(!modalFollowing);
-            }}
-          >
-            <View>
-              <View style={styles.header}>
-                <Icons
-                  onPress={() => {
-                    SetModalFollowing(!modalFollowing);
-                  }}
-                  name="close"
-                  size={30}
-                  color="red"
-                />
+            <Pressable
+              // onPress={() => followerModalRef?.current.open()}
+              style={styles.userInfoItem}
+            >
+              <Text style={styles.userInfoTitle}>{user.followers.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Followers</Text>
+            </Pressable>
+            <Pressable
+              // onPress={() => followingModalRef?.current.open()}
+              style={styles.userInfoItem}
+            >
+              <Text style={styles.userInfoTitle}>{user.following.length}</Text>
+              <Text style={styles.userInfoSubTitle}>Following</Text>
+            </Pressable>
+          </View>
+          <View style={styles.userInfoWrapper}>
+            <Button
+              style={styles.buttons}
+              mode="contained"
+              color={followingCheck ? "tomato" : "green"}
+              onPress={() => followingHandler()}
+            >
+              {followingCheck ? "UnFollow" : "Follow"}
+            </Button>
+          </View>
 
-                <Text style={styles.title}>Following</Text>
-                <Icons name="close" size={30} color={colors.lightBackground} />
-              </View>
-              {user && user.following.length > 0 ? (
-                user.following.map((follow) => (
-                  <UserSearch
-                    key={follow._id}
-                    userId={follow._id}
-                    name={follow.name}
-                    avatar={follow.avatar.url}
-                  />
-                ))
-              ) : (
-                <Text style={{ margin: "2vmax" }}>
-                  You're not following anyone
-                </Text>
-              )}
-            </View>
-          </Modal>
-          <Button
-            style={styles.buttons}
-            mode="contained"
-            color={followingCheck ? "tomato" : "green"}
-            onPress={() => followingHandler()}
-          >
-            {followingCheck ? "UnFollow" : "Follow"}
-          </Button>
-          <Text style={styles.posts}>Posts ({user.posts.length})</Text>
+          {/* <Text style={styles.posts}>Posts ({user.posts.length})</Text> */}
           {posts && posts.length > 0 ? (
             posts.map((post) => (
               <Post
@@ -228,6 +167,7 @@ const Account = ({ route, navigation }) => {
                 ownerId={post.owner._id}
                 isAccount={true}
                 isDelete={true}
+                me={false}
               />
             ))
           ) : (
@@ -281,5 +221,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: { fontSize: 25, color: "blue", marginHorizontal: "25%" },
+  userInfoWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginVertical: 20,
+  },
+  userInfoItem: {
+    justifyContent: "center",
+  },
+  userInfoTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  userInfoSubTitle: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+  },
 });
 export default Account;

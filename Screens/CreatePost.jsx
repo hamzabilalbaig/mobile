@@ -21,7 +21,7 @@ import { useState } from "react";
 import Header from "../Components/Header";
 import { Avatar, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewPost } from "../redux/Actions/Post";
+import { createNewPost, createNewReel } from "../redux/Actions/Post";
 import * as FileSystem from "expo-file-system";
 import { useEffect } from "react";
 import Loader from "../Components/Loader";
@@ -41,12 +41,12 @@ const CreatePost = ({ navigation, route }) => {
 
   const postHandler = async () => {
     if (imageValue) {
-      await dispatch(createNewPost(captionValue, imageValue));
+      await dispatch(createNewReel(captionValue, imageValue));
       alert("Post Created");
       navigation.navigate("home");
       console.log(imageValue, "setting image value");
     } else {
-      await dispatch(createNewPost(captionValue, route?.params?.image));
+      await dispatch(createNewReel(captionValue, route?.params?.image));
       alert("Post Created");
       navigation.navigate("home");
     }

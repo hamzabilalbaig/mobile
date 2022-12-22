@@ -13,10 +13,31 @@ import { colors } from "../constants/Colors";
 import Icons from "react-native-vector-icons/MaterialIcons";
 
 import ReelsComponent from "../Components/ReelsComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getReel } from "../redux/Actions/Post";
+import { useEffect } from "react";
+import { useState } from "react";
+import { ActivityIndicator } from "react-native-paper";
 
 const Reels = () => {
   const { height, width, fontScale } = useWindowDimensions();
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getReel());
+  }, []);
+
+  const { reels, loading, error } = useSelector((state) => state.reel);
+
+  const [data, setdata] = useState([]);
+
+  useEffect(() => {
+    // reels.map((i) => setdata([...data, i.video]));
+    console.log("reels", reels);
+  }, []);
+
   return (
     <View
       style={{
@@ -25,31 +46,12 @@ const Reels = () => {
         position: "relative",
       }}
     >
-      {/* <View
-        style={{
-          paddingTop: 30,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          zIndex: 1,
-          padding: 10,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 20 / fontScale,
-            fontWeight: "bold",
-            color: "white",
-          }}
-        >
-          Reels
-        </Text>
-        <Icons name="camera-alt" color="white" size={25} />
-      </View> */}
-      <ReelsComponent />
+      <ActivityIndicator
+        animating={loading}
+        style={{ position: "absolute", right: 0, left: 0, bottom: 0, top: 0 }}
+      />
+
+      <ReelsComponent data={reels} />
     </View>
   );
 };

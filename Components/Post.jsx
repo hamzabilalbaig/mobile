@@ -17,8 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost, updatePost } from "../redux/Actions/Post";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/Colors";
-import { getMyPosts, loadUser } from "../redux/Actions/User";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  getMyPosts,
+  getUserPosts,
+  getUserProfile,
+  loadUser,
+} from "../redux/Actions/User";
+import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRef } from "react";
 import { Modalize } from "react-native-modalize";
 const Post = ({
@@ -32,6 +37,7 @@ const Post = ({
   ownerId,
   isDelete = false,
   isAccount = false,
+  me,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { user } = useSelector((state) => state.user);
@@ -50,6 +56,7 @@ const Post = ({
       }
     });
   }, [likes, user._id]);
+
   const handleLike = () => {
     setLiked(!like);
     if (like && num === 0) {
@@ -67,7 +74,6 @@ const Post = ({
 
   const editCaptionHandler = () => {
     dispatch(updatePost(editCaption, postId));
-    alert("Post Updated");
     dispatch(getMyPosts());
   };
 
@@ -77,17 +83,17 @@ const Post = ({
       "Are you Sure You want to delete this Post?",
       [
         {
-          text: "YES",
+          text: "Yes",
           onPress: async () => {
             await dispatch(deletePost(postId));
             await dispatch(loadUser());
-            alert("Post Deleted");
+
             setIsDeleted(true);
             await dispatch(getMyPosts());
           },
         },
         {
-          text: "NO",
+          text: "No",
           onPress: () => console.log("no pressed"),
         },
       ],
@@ -96,6 +102,9 @@ const Post = ({
       }
     );
   };
+
+  const [state, setstate] = useState(false);
+  const [editPost, seteditPost] = useState(false);
 
   const ModalRef = useRef(null);
   return !isDeleted ? (
@@ -110,7 +119,38 @@ const Post = ({
           marginBottom: 10,
         }}
       >
-        <UserSearch userId={ownerId} name={ownerName} avatar={ownerImage} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <TouchableOpacity
+            style={[styles.container, { marginTop: 0 }]}
+            onPress={async () => {
+              await dispatch(getUserPosts(ownerId));
+              await dispatch(getUserProfile(ownerId));
+              navigation.navigate("Account", ownerId);
+            }}
+          >
+            <Image
+              style={{ height: 50, width: 50, borderRadius: 25 }}
+              source={{
+                uri: ownerImage,
+              }}
+            />
+            <View style={styles.nameCon}>
+              <Text style={styles.name}>{ownerName}</Text>
+            </View>
+          </TouchableOpacity>
+          {me && (
+            <TouchableOpacity
+              onPress={() => setstate(!state)}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 10,
+              }}
+            >
+              <Feather name="edit" size={18} color="black" />
+            </TouchableOpacity>
+          )}
+        </View>
 
         <View style={styles.imageCon}>
           <Image
@@ -120,7 +160,53 @@ const Post = ({
             }}
           />
         </View>
-        <Text style={styles.text}>{caption}</Text>
+        {state ? (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              backgroundColor: colors.input,
+              borderRadius: 8,
+              elevation: 2,
+              height: null,
+              width: "100%",
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              marginBottom: 20,
+            }}
+          >
+            <TextInput
+              multiline={true}
+              style={{
+                width: "70%",
+                fontSize: 16,
+              }}
+              defaultValue={caption}
+              // value={editCaption}
+              placeholder="Edit your Caption"
+              onChangeText={(e) => {
+                setEditCaption(e);
+                seteditPost(true);
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => editCaptionHandler()}
+              style={{
+                height: 30,
+                backgroundColor: colors.primary,
+                borderRadius: 30 / 2,
+                width: 30,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MaterialIcons name="done-outline" size={18} color="white" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text style={styles.text}>{caption}</Text>
+        )}
+
         <View style={styles.infoCon}>
           <TouchableOpacity
             onPress={() => {
@@ -139,6 +225,13 @@ const Post = ({
           </TouchableOpacity>
 
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Likes", {
+                likes: likes,
+                id: postId,
+                isAccount: isAccount,
+              });
+            }}
             style={{
               width: "30%",
               height: 40,
@@ -165,9 +258,20 @@ const Post = ({
               {" " + (likes.length + num)}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => ModalRef.current.open()}>
+          {isDelete && (
+            <TouchableOpacity
+              onPress={() => {
+                postDeleteHandler();
+              }}
+              style={styles.info}
+            >
+              <Icons name="delete-outline" size={30} color="red" />
+            </TouchableOpacity>
+          )}
+
+          {/* <TouchableOpacity onPress={() => ModalRef.current.open()}>
             <Ionicons name="md-ellipsis-vertical" size={24} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* <View style={styles.infoCon}>
@@ -247,6 +351,7 @@ const Post = ({
         <View
           style={{
             marginHorizontal: 29,
+            position: "absolute",
           }}
         >
           <TouchableOpacity
@@ -383,6 +488,22 @@ const styles = StyleSheet.create({
     // marginRight: "1%",
     // marginBottom: "4%",
     color: "blue",
+  },
+  container: {
+    flexDirection: "row",
+    marginHorizontal: 10,
+    width: "55%",
+    paddingVertical: 10,
+  },
+  name: {
+    color: colors.textSecondary,
+    fontWeight: "600",
+    fontSize: 18,
+  },
+  nameCon: {
+    width: "100%",
+    justifyContent: "center",
+    marginLeft: "5%",
   },
 });
 

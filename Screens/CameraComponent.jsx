@@ -26,15 +26,27 @@ const CameraComponent = ({ navigation, route }) => {
       return;
     }
 
-    await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-      mediaTypes: "Videos",
-    }).then((e) => {
-      console.log(e, "image library");
-      return navigation.navigate("CreatePost", { image: e.uri });
-    });
+    if (route?.params?.video) {
+      await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+        mediaTypes: "Videos",
+      }).then((e) => {
+        console.log(e, "image library");
+        return navigation.navigate("CreatePost", { image: e.uri });
+      });
+    } else {
+      await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+        mediaTypes: "Videos",
+      }).then((e) => {
+        console.log(e, "image library");
+        return navigation.navigate("CreatePost", { image: e.uri });
+      });
+    }
   };
 
   const clickPicture = async () => {

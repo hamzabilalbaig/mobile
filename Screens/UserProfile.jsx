@@ -201,11 +201,11 @@ const UserProfile = ({ route }) => {
               Log out
             </Button>
           </View>
-          <Text style={styles.posts}>Posts ({user.posts.length})</Text>
+          {/* <Text style={styles.posts}>Posts ({user.posts.length})</Text> */}
           {posts && posts.length > 0 ? (
             posts.map((post) => (
               <>
-                {/* <Post
+                <Post
                   key={post._id}
                   postId={post._id}
                   caption={post.caption}
@@ -217,8 +217,9 @@ const UserProfile = ({ route }) => {
                   ownerId={post.owner._id}
                   isAccount={true}
                   isDelete={true}
-                /> */}
-                <View
+                  me={true}
+                />
+                {/* <View
                   style={{
                     flex: 1,
                     backgroundColor: "#F5F4F2",
@@ -307,7 +308,7 @@ const UserProfile = ({ route }) => {
                       </TouchableOpacity>
                     </View>
                   </View>
-                </View>
+                </View> */}
               </>
             ))
           ) : (

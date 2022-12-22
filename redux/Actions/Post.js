@@ -26,7 +26,7 @@ export const addCommentOnPost = (id, comment) => async (dispatch) => {
     dispatch({
       type: "addCommentRequest",
     });
-
+    console.log("req");
     const { data } = await axios.put(
       `${serverURL}/post/comment/${id}`,
       {
@@ -42,6 +42,7 @@ export const addCommentOnPost = (id, comment) => async (dispatch) => {
       type: "addCommentSuccess",
       payload: data.message,
     });
+    console.log(data);
   } catch (error) {
     dispatch({
       type: "addCommentFailure",
@@ -79,7 +80,7 @@ export const createNewPost = (caption, image) => async (dispatch) => {
     console.log(image, "action");
     const { data } = await axios
       .post(
-        `${serverURL}/reel/upload`,
+        `${serverURL}/post/upload`,
         {
           caption,
           image,
@@ -97,15 +98,72 @@ export const createNewPost = (caption, image) => async (dispatch) => {
       type: "newPostSuccess",
       payload: data,
     });
-    console.log(data, "reels data");
+    console.log(data);
   } catch (error) {
     dispatch({
       type: "newPostFailure",
       payload: error.response,
     });
-    console.log(error, "upload error");
+    console.log(error.response, "image upload error");
   }
 };
+
+export const createNewReel = (caption, image) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "newReelRequest",
+    });
+    console.log(image, "action");
+    const { data } = await axios
+      .post(
+        `${serverURL}/reel/upload`,
+        {
+          caption: caption,
+          reel: image,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((e) => {
+        console.log(e);
+      });
+    dispatch({
+      type: "newReelSuccess",
+      payload: data,
+    });
+    console.log(data, "reels data");
+  } catch (error) {
+    dispatch({
+      type: "newReelFailure",
+      payload: error.response,
+    });
+    console.log(error.response, "upload error");
+  }
+};
+
+export const getReel = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getReelRequest",
+    });
+    console.log("req");
+    const { data } = await axios.get(`${serverURL}/reels`);
+    dispatch({
+      type: "getReelSuccess",
+      payload: data,
+    });
+    // console.log(data);
+  } catch (error) {
+    dispatch({
+      type: "ReelFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
 export const updatePost = (caption, id) => async (dispatch) => {
   try {
     dispatch({

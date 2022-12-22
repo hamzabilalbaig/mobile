@@ -51,6 +51,18 @@ export const likeReducer = createReducer(initialState, {
     state.error = action.payload;
   },
 
+  newReelRequest: (state) => {
+    state.loading = true;
+  },
+  newReelSuccess: (state, action) => {
+    state.loading = false;
+    state.message = action.payload;
+  },
+  newReelFailure: (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  },
+
   updateCaptionRequest: (state) => {
     state.loading = true;
   },
@@ -185,5 +197,19 @@ export const userPostsReducer = createReducer(initialState, {
   },
   clearErrors: (state) => {
     state.error = null;
+  },
+});
+
+export const getReelReducer = createReducer(initialState, {
+  getReelRequest: (state) => {
+    state.loading = true;
+  },
+  getReelSuccess: (state, action) => {
+    state.loading = false;
+    state.reels = action.payload.reels;
+  },
+  getReelFailure: (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
   },
 });
